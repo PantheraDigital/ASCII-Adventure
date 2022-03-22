@@ -11,21 +11,6 @@ namespace AsciiProgram
 {
     
 
-    public class Tile
-    {
-        public DisplayObject m_displayObject { get; protected set; }
-        public bool m_solid { get; set; }
-
-        public Tile(DisplayObject displayObject)
-        {
-            m_displayObject = displayObject;
-            m_solid = false;
-        }
-
-        public virtual void Update() { }
-        public virtual void OnCollide() { }
-    }
-
     public class DisplayObject
     {
         public char m_spriteChar { get; set; }
