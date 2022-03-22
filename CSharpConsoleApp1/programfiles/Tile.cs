@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace AsciiProgram
 {
-
-
     public class Tile
     {
         public DisplayObject m_displayObject { get; protected set; }
