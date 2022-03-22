@@ -25,3 +25,4 @@ namespace AsciiProgram
             return m_displayObject.m_displayPosition;
         }
     }
+}

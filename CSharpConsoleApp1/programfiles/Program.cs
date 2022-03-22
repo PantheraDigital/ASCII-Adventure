@@ -9,13 +9,6 @@ using FastConsole;
 
 namespace AsciiProgram
 {
-    public abstract class Controller
-    {
-        public abstract void Update();
-        public abstract ConsoleKeyInfo GetInput();
-        public abstract bool HasInput();
-    }
-
     public class PlayerController : Controller
     {
         ConsoleKeyInfo m_input;

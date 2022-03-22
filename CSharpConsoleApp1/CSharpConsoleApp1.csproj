@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="programfiles\Controller.cs" />
     <Compile Include="programfiles\DisplayObject.cs" />
     <Compile Include="programfiles\Entity.cs" />
     <Compile Include="programfiles\FastWrite.cs" />
