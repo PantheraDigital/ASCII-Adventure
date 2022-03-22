@@ -9,28 +9,6 @@ using FastConsole;
 
 namespace AsciiProgram
 {
-    
-
-
-    public abstract class Entity//concrete entities will define what controllers do when given input such as move or act some way
-    {
-        protected Controller m_controller;
-        public DisplayObject m_displayObject { get; protected set; }
-
-
-        public Entity(DisplayObject displayObject, Controller controller)
-        {
-            m_displayObject = displayObject;
-            m_controller = controller;
-        }
-
-        public abstract void Update();
-
-        public virtual Vector2 GetCurrentPosition()
-        {
-            return m_displayObject.m_displayPosition;
-        }
-    }
 
     public class MovingEntity : Entity//make interface? IMove? 
     {
