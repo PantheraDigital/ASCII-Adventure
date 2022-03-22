@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="programfiles\DisplayObject.cs" />
     <Compile Include="programfiles\FastWrite.cs" />
     <Compile Include="programfiles\Program.cs" />
     <Compile Include="programfiles\Tile.cs" />
