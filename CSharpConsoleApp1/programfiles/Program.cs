@@ -23,11 +23,6 @@ namespace AsciiProgram
 
 
             List<List<Tile>> levelLayout;
-            string layout = "...........\n" +
-                            "......O.....\n" +
-                            ".......O.......\n" +
-                            ".......O...\n" +
-                            "...........\n";
 
             string mazeLevel =  "============================================\n" +
                                 "=                =       =       =         =\n" +

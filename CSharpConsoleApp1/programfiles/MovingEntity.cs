@@ -11,6 +11,7 @@ namespace AsciiProgram
     {
         Vector2 m_movePosition;
         bool m_moved;
+        string m_tags;
 
 
         public MovingEntity(DisplayObject displayObject, Controller controller)
@@ -68,6 +69,10 @@ namespace AsciiProgram
             m_moved = true;
         }
 
+        public string GetTags()
+        {
+            return m_tags;
+        }
     }
 }
 
