@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-using FastConsole;
 
 namespace AsciiProgram
 {
@@ -90,11 +89,10 @@ namespace AsciiProgram
                         quit = true;
                     else if (controller.GetInput().Key == ConsoleKey.E)
                     {
-                        testWindow2.SetActive(true);
                         testWindow2.Draw(1);
                         Console.ReadKey(true);
 
-                        testWindow2.SetActive(false);
+                        testWindow2.Erase();
                     }
                 }
 

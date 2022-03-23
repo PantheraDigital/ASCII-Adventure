@@ -197,6 +197,8 @@ namespace FastConsole
             Console.Clear();
         }
 
+        //simple way of getting rid of somthing drawn but for more control
+        //have fastwrite loop through all char infos on layer and get rid of ones that only match with what needs to be erased, then redraw all on that layer
         public void ClearLayer(int layer)
         {
             if (ValidLayer(layer))

@@ -51,7 +51,7 @@ namespace AsciiProgram
         }
 
 
-        public Char GetBackgroundCharacter()
+        public char GetBackgroundCharacter()
         {
             return m_backgroundChar;
         }
@@ -61,12 +61,15 @@ namespace AsciiProgram
             return m_windowSize;
         }
 
-        public void SetActive(bool active)
+        public void Erase()
         {
-            m_active = active;
+            m_active = false;
+            m_fastWrite.ClearLayer(m_layer);
+        }
 
-            if (active == false)
-                m_fastWrite.ClearLayer(m_layer);
+        public bool IsActive()
+        {
+            return m_active;
         }
 
         public void SetWindowSize(Vector2 size)
