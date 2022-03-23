@@ -49,6 +49,7 @@
     <Compile Include="programfiles\DisplayObject.cs" />
     <Compile Include="programfiles\Entity.cs" />
     <Compile Include="programfiles\FastWrite.cs" />
+    <Compile Include="programfiles\GameObject.cs" />
     <Compile Include="programfiles\GameWindow.cs" />
     <Compile Include="programfiles\Level.cs" />
     <Compile Include="programfiles\LevelCamera.cs" />

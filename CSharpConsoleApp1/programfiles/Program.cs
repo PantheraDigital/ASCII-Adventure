@@ -10,12 +10,6 @@ using FastConsole;
 namespace AsciiProgram
 {
 
-    public abstract class GameObject
-    {
-        public virtual void Update() { }
-        public virtual void OnCollide(ref Entity other) { }
-    }
-
     class Program
     {
         static void Main(string[] args)
