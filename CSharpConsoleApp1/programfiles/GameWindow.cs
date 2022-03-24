@@ -26,6 +26,7 @@ namespace AsciiProgram
         ConsoleColor m_messageBackgroundColor;
 
         bool m_active;
+        bool m_updated;
         int m_layer;
         FastWrite m_fastWrite;
 
@@ -75,7 +76,10 @@ namespace AsciiProgram
         public void SetWindowSize(Vector2 size)
         {
             if (size.x > 0 && size.y > 0)
+            {
                 m_windowSize = size;
+                m_updated = true;
+            }
         }
 
         public Vector2 GetScreenPosition()
@@ -86,41 +90,51 @@ namespace AsciiProgram
         public void SetScreenPosition(Vector2 position)
         {
             if (position.x > 0 && position.y > 0)
+            {
                 m_screenPosition = position;
+                m_updated = true;
+            }
         }
 
         public void SetMessage(string message)
         {
             m_message = message;
+            m_updated = true;
         }
         public void SetMessage(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
         {
             m_message = message;
+            m_updated = true;
             SetMessageColors(foregroundColor, backgroundColor);
         }
 
         public void SetTextWrapping(bool textWrapping)
         {
             m_textWrapping = textWrapping;
+            m_updated = true;
         }
 
         public void SetMessageColors(ConsoleColor foreground, ConsoleColor background)
         {
             m_messageForegroundColor = foreground;
             m_messageBackgroundColor = background;
+            m_updated = true;
         }
 
         public void SetWindowColros(ConsoleColor foreground, ConsoleColor background)
         {
             m_windowForegroundColor = foreground;
             m_windowBackgroundColor = background;
+            m_updated = true;
         }
 
         public void Draw(int layer)
         {
-            if (!m_active)
-                return;
+            if (!m_updated && m_active)
+                return; 
 
+
+            m_active = true;
             m_layer = layer;
 
             //fill window with background

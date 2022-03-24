@@ -24,7 +24,7 @@ namespace AsciiProgram
             List<List<Tile>> levelLayout;
 
             string mazeLevel =  "============================================\n" +
-                                "=                =       =       =         =\n" +
+                                "=      *         =       =       =         =\n" +
                                 "=== ============ =   === =     = ===== === =\n" +
                                 "=              = === =   ===== =         = =\n" +
                                 "= ========= == = =   = ===   = = ===== === =\n" +
@@ -165,6 +165,14 @@ namespace AsciiProgram
 
                 case ' ':
                     tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
+                    break;
+
+                case '*':
+                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 0), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+                    testWindow2.SetMessage("Hello There", ConsoleColor.Cyan, ConsoleColor.Black);
+                    testWindow2.SetTextWrapping(true);
+
+                    tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.DarkGray, ConsoleColor.Black, position), new ShowWindowTrigger(testWindow2, 2));
                     break;
 
                 default:

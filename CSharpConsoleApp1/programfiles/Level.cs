@@ -55,9 +55,11 @@ namespace AsciiProgram
                 {
                     if (ValidateMove(m_movingEntities[i].GetMoveLocation()))
                     {
-                        Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
-
                         m_movingEntities[i].Move();
+
+
+                        Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
+                        m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
                     }
                 }
             }

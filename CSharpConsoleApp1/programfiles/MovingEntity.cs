@@ -14,11 +14,12 @@ namespace AsciiProgram
         string m_tags;
 
 
-        public MovingEntity(DisplayObject displayObject, Controller controller)
+        public MovingEntity(DisplayObject displayObject, Controller controller, string tags = "none")
             : base(displayObject, controller)
         {
             m_movePosition = m_displayObject.m_displayPosition;
             m_moved = false;
+            m_tags = tags;
         }
 
         public override void Update()
