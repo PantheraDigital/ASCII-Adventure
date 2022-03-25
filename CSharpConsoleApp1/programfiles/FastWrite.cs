@@ -192,6 +192,7 @@ namespace FastConsole
             for (int i = 0; i < bufList.Count; ++i)
             {
                 bufList[i].Clear();
+                bufList[layer].AddRange(new CharSetInfo[bufWidth * bufHeight]);
             }
 
             Console.Clear();
