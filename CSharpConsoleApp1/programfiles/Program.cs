@@ -23,28 +23,8 @@ namespace AsciiProgram
 
             List<List<Tile>> levelLayout;
 
-            string mazeLevel =  "============================================\n" +
-                                "=      *         =       =       =         =\n" +
-                                "=== ============ =   === =     = ===== === =\n" +
-                                "=              = === =   ===== =         = =\n" +
-                                "= ========= == = =   = ===   = = ===== === =\n" +
-                                "= =   =   = =  =   = =     =   = =     = ===\n" +
-                                "= = =   = = =  ===== =========== = =====   =\n" +
-                                "= = ===== = = ==     =       =   =     === =\n" +
-                                "= =     = = =  = = = = ===== = ======= =   =\n" +
-                                "= ===== = = == = = =   =     =   =   = = ===\n" +
-                                "=       =   =  = = ===== ========= =   =   =\n" +
-                                "=========== = == =     =         = === =====\n" +
-                                "=           = =  ===== =     ===   ===     =\n" +
-                                "= =========== === =    ===== ========  =====\n" +
-                                "= =           =   = ====     =             =\n" +
-                                "= =================    = ===================\n" +
-                                "= =   =      =         =       =           =\n" +
-                                "= = = === == = =========  ==== = ==== ==== =\n" +
-                                "=   =      =   =                      =    =\n" +
-                                "============================================\n";
 
-            levelLayout = SetUpLevel(mazeLevel);
+            levelLayout = SetUpLevel(LevelLayouts.mazeLevel1);
             
 
             PlayerController controller = new PlayerController();
@@ -150,12 +130,11 @@ namespace AsciiProgram
             switch (tileType)
             {
                 case '.'://background 
-                    tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.Gray, ConsoleColor.Black, position));
+                    tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
-                case 'O'://wall
-                    tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.White, ConsoleColor.Black, position));
-                    tileToAdd.m_solid = true;
+                case 'O'://spawn
+                    tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
                 case '='://wall
@@ -163,11 +142,11 @@ namespace AsciiProgram
                     tileToAdd.m_solid = true;
                     break;
 
-                case ' ':
+                case ' '://background
                     tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
-                case '*':
+                case '*'://message tile
                     GameWindow testWindow2 = new GameWindow(new Vector2(1, 0), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
                     testWindow2.SetMessage("Hello There", ConsoleColor.Cyan, ConsoleColor.Black);
                     testWindow2.SetTextWrapping(true);
@@ -175,7 +154,7 @@ namespace AsciiProgram
                     tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.DarkGray, ConsoleColor.Black, position), new ShowWindowTrigger(testWindow2, 2));
                     break;
 
-                default:
+                default://wall
                     tileToAdd = new Tile(new DisplayObject(' ', ConsoleColor.Gray, ConsoleColor.Black, position));
                     tileToAdd.m_solid = true;
                     break;

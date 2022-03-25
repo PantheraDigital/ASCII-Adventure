@@ -53,6 +53,7 @@
     <Compile Include="programfiles\GameWindow.cs" />
     <Compile Include="programfiles\Level.cs" />
     <Compile Include="programfiles\LevelCamera.cs" />
+    <Compile Include="programfiles\LevelLayouts.cs" />
     <Compile Include="programfiles\MovingEntity.cs" />
     <Compile Include="programfiles\PlayerController.cs" />
     <Compile Include="programfiles\Program.cs" />
