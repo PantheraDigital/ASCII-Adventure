@@ -43,7 +43,7 @@ namespace AsciiProgram
             InitalizeDisplaySize(displayBounds);
 
             m_fastWrite = FastWrite.GetInstance();
-        }
+        } 
 
 
         public void SetEmptyChar(char emptyChar)
