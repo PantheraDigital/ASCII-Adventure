@@ -49,8 +49,8 @@ namespace AsciiProgram
             testWindow.SetMessage("Quit", ConsoleColor.Blue, ConsoleColor.DarkGray);
             testWindow.SetTextWrapping(true);
 
-            GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-            testWindow2.SetMessage("Hello There", ConsoleColor.Cyan, ConsoleColor.Black);
+            GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(12, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            testWindow2.SetMessage("Hello\n There", ConsoleColor.Cyan, ConsoleColor.Black);
             testWindow2.SetTextWrapping(true);
             
 
@@ -133,7 +133,7 @@ namespace AsciiProgram
                     tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
-                case 'O'://spawn
+                case '0'://spawn
                     tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 

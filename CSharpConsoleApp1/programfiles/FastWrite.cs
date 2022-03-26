@@ -156,11 +156,18 @@ namespace FastConsole
         }
         public void AddToBuffer(int x, int y, int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
-            for (int i = 0; i < input.Length; ++i)
+            string[] tempInput = input.Split('\n');
+
+            foreach(string line in tempInput)
             {
-                if (GetBufferPos(x + i, y, layer) <= GetBufferPos(bufWidth - 1, y, layer))
-                    AddToBuffer(x + i, y, layer, input[i], foreground, background);
+                for (int i = 0; i < line.Length; ++i)
+                {
+                    if (GetBufferPos(x + i, y, layer) <= GetBufferPos(bufWidth - 1, y, layer))
+                        AddToBuffer(x + i, y, layer, line[i], foreground, background);
+                }
+                y += 1;
             }
+            
         }
         public void AddToBuffer(Vector2 position, int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
