@@ -72,11 +72,11 @@ namespace FastConsole
 
         static FastWrite instance;
 
-        SafeFileHandle handle;
-        List<List<CharSetInfo>> bufList;
-        SmallRect rect;
-        short bufWidth;
-        short bufHeight;
+        static SafeFileHandle handle;
+        static List<List<CharSetInfo>> bufList;
+        static SmallRect rect;
+        static short bufWidth;
+        static short bufHeight;
 
         //singlton
         private FastWrite()
@@ -92,8 +92,18 @@ namespace FastConsole
             return instance;
         }
 
-        public bool InitializeBuffer(short bufferX, short bufferY)
+        public static bool InitializeBuffer(short bufferX = 0, short bufferY = 0)
         {
+            if (instance == null)
+                instance = new FastWrite();
+
+            if (bufferX <= 0 || bufferY <= 0)
+            {
+                bufferX = (short)Console.WindowWidth;
+                bufferY = (short)Console.WindowHeight;
+            }
+
+
             handle = CreateFile("CONOUT$", 0x40000000, 2, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
 
             if (!handle.IsInvalid)

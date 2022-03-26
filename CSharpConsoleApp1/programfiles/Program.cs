@@ -25,7 +25,8 @@ namespace AsciiProgram
 
 
             levelLayout = SetUpLevel(LevelLayouts.mazeLevel1);
-            
+
+            FastConsole.FastWrite.InitializeBuffer();
 
             PlayerController controller = new PlayerController();
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -52,6 +53,8 @@ namespace AsciiProgram
             GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(12, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             testWindow2.SetMessage("Hello\n There", ConsoleColor.Cyan, ConsoleColor.Black);
             testWindow2.SetTextWrapping(true);
+
+
             
 
             while (quit == false)

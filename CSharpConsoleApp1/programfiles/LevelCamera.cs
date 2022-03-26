@@ -43,7 +43,6 @@ namespace AsciiProgram
             InitalizeDisplaySize(displayBounds);
 
             m_fastWrite = FastWrite.GetInstance();
-            m_fastWrite.InitializeBuffer((short)Console.WindowWidth, (short)Console.WindowHeight);
         }
 
 

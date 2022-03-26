@@ -25,6 +25,12 @@ namespace AsciiProgram
         ConsoleColor m_messageForegroundColor;
         ConsoleColor m_messageBackgroundColor;
 
+        char m_borderChar;
+        bool m_useBorder;
+        ConsoleColor m_borderForegroundColor;
+        ConsoleColor m_borderBackgroundColor;
+
+
         bool m_active;
         bool m_updated;
         int m_layer;
@@ -37,18 +43,24 @@ namespace AsciiProgram
             m_screenPosition = screenPosition;
             m_windowSize = windowSize;
             m_backgroundChar = backgroundChar;
+            m_borderChar = backgroundChar;
+
             m_windowForegroundColor = windowForegroundColor;
             m_windowBackgroundColor = windowBackgroundColor;
             m_messageForegroundColor = windowForegroundColor;
             m_messageBackgroundColor = windowBackgroundColor;
+            m_borderForegroundColor = windowForegroundColor;
+            m_borderBackgroundColor = windowBackgroundColor;
 
             m_message = "";
-            m_textWrapping = false;
 
+            m_textWrapping = false;
+            m_useBorder = false;
             m_active = true;
+
             m_layer = 0;
+
             m_fastWrite = FastWrite.GetInstance();
-            m_fastWrite.InitializeBuffer((short)Console.WindowWidth, (short)Console.WindowHeight);
         }
 
 
@@ -121,7 +133,7 @@ namespace AsciiProgram
             m_updated = true;
         }
 
-        public void SetWindowColros(ConsoleColor foreground, ConsoleColor background)
+        public void SetWindowColors(ConsoleColor foreground, ConsoleColor background)
         {
             m_windowForegroundColor = foreground;
             m_windowBackgroundColor = background;
