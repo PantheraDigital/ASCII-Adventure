@@ -120,9 +120,22 @@ namespace AsciiProgram
             SetMessageColors(foregroundColor, backgroundColor);
         }
 
+        public void SetBorderChar(char borderChar)
+        {
+            m_borderChar = borderChar;
+            m_updated = true;
+            m_useBorder = true;
+        }
+
         public void SetTextWrapping(bool textWrapping)
         {
             m_textWrapping = textWrapping;
+            m_updated = true;
+        }
+
+        public void SetUseBorder(bool useBorder)
+        {
+            m_useBorder = useBorder;
             m_updated = true;
         }
 
@@ -140,6 +153,13 @@ namespace AsciiProgram
             m_updated = true;
         }
 
+        public void SetBorderColor(ConsoleColor foreground, ConsoleColor background)
+        {
+            m_borderForegroundColor = foreground;
+            m_borderBackgroundColor = background;
+            m_updated = true;
+        }
+
         public void Draw(int layer)
         {
             if (!m_updated && m_active)
@@ -149,15 +169,9 @@ namespace AsciiProgram
             m_active = true;
             m_layer = layer;
 
-            //fill window with background
-            for (int y = 0; y < m_windowSize.y; ++y)
-            {
-                for (int x = 0; x < m_windowSize.x; ++x)
-                {
-                    m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
-                }
-            }
-
+            DrawBackground(layer);
+            DrawText(layer);
+            /*
             //print message
             string messageToPrint = m_message;
 
@@ -211,9 +225,157 @@ namespace AsciiProgram
                 else
                     m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y, layer, messageToPrint, m_messageForegroundColor, m_messageBackgroundColor);
 
-            }
+            }*/
 
             m_fastWrite.DisplayBuffer();
+        }
+
+        void DrawBackground(int layer)
+        {
+            //fill window with background, include border
+            for (int y = 0; y < m_windowSize.y; ++y)
+            {
+                if (m_useBorder)
+                {
+                    if (y == 0 || y == m_windowSize.y - 1)
+                    {
+                        //fill first and last row with border
+                        for (int x = 0; x < m_windowSize.x; ++x)
+                        {
+                            m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                        }
+                    }
+                    else
+                    {
+                        //fill first and last positions with border
+                        for (int x = 0; x < m_windowSize.x; ++x)
+                        {
+                            if (x == 0 || x == m_windowSize.x - 1)
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                            else
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                        }
+                    }
+
+                }
+                else
+                {
+                    for (int x = 0; x < m_windowSize.x; ++x)
+                    {
+                        m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                    }
+                }
+            }
+        }
+
+        void DrawText(Vector2 offset, Vector2 bounds)
+        {
+            //print message
+            string messageToPrint = m_message;
+
+            Vector2 pos = m_screenPosition;
+
+            if (InWindowSpace(offset))
+            {
+                pos.x += offset.x;
+                pos.y += offset.y;
+            }
+
+            if (!InWindowSpace(bounds))
+            {
+                bounds = m_windowSize;
+            }
+
+
+        }
+        void DrawText(int layer)
+        {
+            string messageToPrint = m_message;
+            Vector2 bounds = m_windowSize;
+            Vector2 pos = m_screenPosition;
+
+
+            if (m_useBorder)
+            {
+                pos.x += 1;
+                pos.y += 1;
+                bounds.x -= 2;
+                bounds.y -= 2;
+            }
+
+
+            if (m_textWrapping)
+            {
+                if(m_fastWrite.SetCursorPosition(pos))
+                {
+                    string[] words = messageToPrint.Split(' ');
+                    string[] message = new string[bounds.y];
+                    int fullLines = 0;
+
+                    for (int i = 0; i < words.Length; ++i)
+                    {
+                        //need to update to look for '\n' in word
+                        bool useSpace = true;
+                        if ((message[fullLines] + words[i]).Length > bounds.x)
+                        {
+                            fullLines += 1;
+                            useSpace = false;
+                        }
+                        else if (i + 1 < words.Length && (((message[fullLines] + words[i]).Length == bounds.x) ||
+                            ((message[fullLines] + words[i] + words[i + 1]).Length > bounds.x)))
+                        {
+                            //if next word fits in line without space
+                            useSpace = false;
+                        }
+
+                        if (fullLines < bounds.y)
+                        {
+                            if (useSpace)
+                                message[fullLines] += string.Format("{0} ", words[i]);
+                            else
+                                message[fullLines] += words[i];
+                        }
+                        else
+                            fullLines -= 1;
+                    }
+
+                    for (int i = 0; i <= fullLines; ++i)
+                    {
+                        m_fastWrite.AddToBuffer(pos.x, pos.y + i, layer, message[i], m_messageForegroundColor, m_messageBackgroundColor);
+                    }
+                }
+            }
+            else
+            {
+                if(m_fastWrite.SetCursorPosition(pos))
+                {
+                    for (int i = 0; i < messageToPrint.Length; ++i)
+                    {
+                        if (pos.x + i > bounds.x)
+                            break;
+
+                        if(messageToPrint[i] == '\n')
+                        {
+                            ++pos.y;
+                            if (!m_fastWrite.SetCursorPosition(pos) || pos.y + 1 <= bounds.y)
+                                break;
+                        }
+
+                        if (messageToPrint[i] != '\n')
+                            m_fastWrite.AddToBuffer(layer, messageToPrint[i], m_messageForegroundColor, m_messageBackgroundColor);
+                    }
+                }
+                
+            }
+        }
+
+        bool InWindowSpace(Vector2 relativePosition)
+        {
+            if (relativePosition.x >= 0 && relativePosition.x <= m_windowSize.x)
+                if (relativePosition.y >= 0 && relativePosition.y <= m_windowSize.y)
+                    return true;
+
+            return false;
         }
     }
 }

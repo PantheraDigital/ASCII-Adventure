@@ -50,10 +50,10 @@ namespace AsciiProgram
             testWindow.SetMessage("Quit", ConsoleColor.Blue, ConsoleColor.DarkGray);
             testWindow.SetTextWrapping(true);
 
-            GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(12, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(13, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             testWindow2.SetMessage("Hello\n There", ConsoleColor.Cyan, ConsoleColor.Black);
             testWindow2.SetTextWrapping(true);
-
+            testWindow2.SetBorderChar('*');
 
             
 
@@ -150,8 +150,8 @@ namespace AsciiProgram
                     break;
 
                 case '*'://message tile
-                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 0), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-                    testWindow2.SetMessage("Hello There", ConsoleColor.Cyan, ConsoleColor.Black);
+                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 0), new Vector2(12, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+                    testWindow2.SetMessage("Hello\n There", ConsoleColor.Cyan, ConsoleColor.Black);
                     testWindow2.SetTextWrapping(true);
 
                     tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.DarkGray, ConsoleColor.Black, position), new ShowWindowTrigger(testWindow2, 2));
