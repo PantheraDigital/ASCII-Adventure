@@ -268,7 +268,7 @@ namespace AsciiProgram
             }
         }
 
-        void DrawText(int layer)
+        void DrawText(int layer)//test to see if local save survies without commit
         {
             string messageToPrint = m_message;
             Vector2 bounds = m_windowSize;
@@ -288,69 +288,79 @@ namespace AsciiProgram
             {
                 if (m_fastWrite.SetCursorPosition(pos))
                 {
-                    string[] lines = messageToPrint.Split('\n');
+                    string[] lines = messageToPrint.Split(' ');
                     List<string> formattedMessage = new List<string>();
                     
-
-                    for (int i = 0; i < lines.Length; ++i)//loop through each line
+                    StringBuilder line = new StringBuilder();
+                    
+                    foreach(string word in lines)
                     {
-                        if (formattedMessage.Count >= bounds.y)
+                        if((line + word).Length <= bounds.x)
                         {
-                            break;
+                            line.Append(word + " ");
                         }
-
-                        string word = "";
-                        bool wordDone = false;
-                        bool newLine = false;
-                        string line = "";
-                        
-                        for(int x = 0; x < lines[i].Length; ++x)//loop through chars in line
+                        else if(word.Length > bounds.x)
                         {
-                            if (lines[i][x] != ' ' || lines[i][x] != '\n')
-                            {
-                                word = word + lines[i][x];
-                            }
-                            else if (lines[i][x] == '\n')
-                            {
-                                newLine = true;
-                                wordDone = true;
-                            }
-                            else
-                                wordDone = true;
+                            formattedMessage.Add(line.ToString());
+                            line.Clear();
+                            StringBuilder cutWord = new StringBuilder();
 
-                            if (wordDone)
+                            foreach(char letter in word)
                             {
-                                if((line + word).Length > bounds.x)
+                                if (cutWord.Length == bounds.x || letter == '\n')
                                 {
-                                    formattedMessage.Add(line.Trim(' '));
-                                    line = word + " ";
+                                    formattedMessage.Add(cutWord.ToString());
+                                    cutWord.Clear();
                                 }
-                                else
-                                {
-                                    line = line + word + " ";
-                                }
+
+                                cutWord.Append(letter);
                             }
-
-                            if (newLine)
-                                formattedMessage.Add("\n");
-
-                            if (formattedMessage.Count >= bounds.y)
-                                break;
-
-                            if (x == lines[i].Length - 1 && line.Length > 0 && formattedMessage.Count < bounds.y)
-                                formattedMessage.Add(line.TrimEnd(' '));
+                            if (cutWord.Length > 0)
+                                formattedMessage.Add(cutWord.ToString());
+                        }
+                        else
+                        {
+                            formattedMessage.Add(line.ToString());
+                            line.Clear();
+                            line.Append(word + " ");
                         }
                     }
 
+                    if(line.Length > 0)
+                        formattedMessage.Add(line.ToString());
+
+                    //
                     m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, formattedMessage.Count.ToString(), m_messageForegroundColor, m_messageBackgroundColor);
-                    for (int i = 0; i < formattedMessage.Count; ++i)
+                    m_fastWrite.SetCursorPosition(pos);
+                    //
+                    int timesToLoop = 0;
+                    if (formattedMessage.Count > bounds.y)
+                        timesToLoop = bounds.y;
+                    else
+                        timesToLoop = formattedMessage.Count;
+
+                    for (int i = 0; i < timesToLoop; ++i)
                     {
-                        pos.y += i;
-                        if (formattedMessage[i].Equals("\n"))
+                        int numLineBreaks = 0;
+                        //++pos.y;
+
+                        for(int x = 0; x < formattedMessage[i].Length; ++x)
                         {
-                            if (m_fastWrite.SetCursorPosition(pos))
-                                m_fastWrite.AddToBuffer(layer, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+                            if(formattedMessage[i][x] == '\n')
+                            {
+                                ++pos.y;
+                                ++numLineBreaks;
+                                if (!m_fastWrite.SetCursorPosition(pos) || numLineBreaks + 1 > bounds.y)
+                                    break;
+                            }
+
+                            if (x - (numLineBreaks * bounds.x) >= bounds.x)
+                                break;
+
+                            if (formattedMessage[i][x] != '\n')
+                                m_fastWrite.AddToBuffer(layer, formattedMessage[i][x], m_messageForegroundColor, m_messageBackgroundColor);
                         }
+                        
                     }
                 }
             }

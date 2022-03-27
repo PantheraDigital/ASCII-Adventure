@@ -150,7 +150,7 @@ namespace AsciiProgram
                     break;
 
                 case '*'://message tile
-                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 0), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 1), new Vector2(10, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
                     testWindow2.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
                     testWindow2.SetTextWrapping(true);
 
