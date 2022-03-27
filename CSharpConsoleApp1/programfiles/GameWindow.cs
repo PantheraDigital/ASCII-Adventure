@@ -163,7 +163,7 @@ namespace AsciiProgram
         public void Draw(int layer)
         {
             if (!m_updated && m_active)
-                return; 
+                return;
 
 
             m_active = true;
@@ -191,8 +191,8 @@ namespace AsciiProgram
                             fullLines += 1;
                             useSpace = false;
                         }
-                        else if (((message[fullLines] + words[i]).Length == m_windowSize.x) ||
-                            ((message[fullLines] + words[i] + words[i + 1]).Length > m_windowSize.x))
+                        else if (i + 1 < words.Length && (((message[fullLines] + words[i]).Length == bounds.x) ||
+                            ((message[fullLines] + words[i] + words[i + 1]).Length > bounds.x)))
                         {
                             useSpace = false;
                         }
@@ -268,26 +268,6 @@ namespace AsciiProgram
             }
         }
 
-        void DrawText(Vector2 offset, Vector2 bounds)
-        {
-            //print message
-            string messageToPrint = m_message;
-
-            Vector2 pos = m_screenPosition;
-
-            if (InWindowSpace(offset))
-            {
-                pos.x += offset.x;
-                pos.y += offset.y;
-            }
-
-            if (!InWindowSpace(bounds))
-            {
-                bounds = m_windowSize;
-            }
-
-
-        }
         void DrawText(int layer)
         {
             string messageToPrint = m_message;
@@ -304,69 +284,100 @@ namespace AsciiProgram
             }
 
 
-            if (m_textWrapping)
+            if (m_textWrapping && messageToPrint.Length > bounds.x)
             {
-                if(m_fastWrite.SetCursorPosition(pos))
+                if (m_fastWrite.SetCursorPosition(pos))
                 {
-                    string[] words = messageToPrint.Split(' ');
-                    string[] message = new string[bounds.y];
-                    int fullLines = 0;
+                    string[] lines = messageToPrint.Split('\n');
+                    List<string> formattedMessage = new List<string>();
+                    
 
-                    for (int i = 0; i < words.Length; ++i)
+                    for (int i = 0; i < lines.Length; ++i)//loop through each line
                     {
-                        //need to update to look for '\n' in word
-                        bool useSpace = true;
-                        if ((message[fullLines] + words[i]).Length > bounds.x)
+                        if (formattedMessage.Count >= bounds.y)
                         {
-                            fullLines += 1;
-                            useSpace = false;
-                        }
-                        else if (i + 1 < words.Length && (((message[fullLines] + words[i]).Length == bounds.x) ||
-                            ((message[fullLines] + words[i] + words[i + 1]).Length > bounds.x)))
-                        {
-                            //if next word fits in line without space
-                            useSpace = false;
+                            break;
                         }
 
-                        if (fullLines < bounds.y)
+                        string word = "";
+                        bool wordDone = false;
+                        bool newLine = false;
+                        string line = "";
+                        
+                        for(int x = 0; x < lines[i].Length; ++x)//loop through chars in line
                         {
-                            if (useSpace)
-                                message[fullLines] += string.Format("{0} ", words[i]);
+                            if (lines[i][x] != ' ' || lines[i][x] != '\n')
+                            {
+                                word = word + lines[i][x];
+                            }
+                            else if (lines[i][x] == '\n')
+                            {
+                                newLine = true;
+                                wordDone = true;
+                            }
                             else
-                                message[fullLines] += words[i];
+                                wordDone = true;
+
+                            if (wordDone)
+                            {
+                                if((line + word).Length > bounds.x)
+                                {
+                                    formattedMessage.Add(line.Trim(' '));
+                                    line = word + " ";
+                                }
+                                else
+                                {
+                                    line = line + word + " ";
+                                }
+                            }
+
+                            if (newLine)
+                                formattedMessage.Add("\n");
+
+                            if (formattedMessage.Count >= bounds.y)
+                                break;
+
+                            if (x == lines[i].Length - 1 && line.Length > 0 && formattedMessage.Count < bounds.y)
+                                formattedMessage.Add(line.TrimEnd(' '));
                         }
-                        else
-                            fullLines -= 1;
                     }
 
-                    for (int i = 0; i <= fullLines; ++i)
+                    m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, formattedMessage.Count.ToString(), m_messageForegroundColor, m_messageBackgroundColor);
+                    for (int i = 0; i < formattedMessage.Count; ++i)
                     {
-                        m_fastWrite.AddToBuffer(pos.x, pos.y + i, layer, message[i], m_messageForegroundColor, m_messageBackgroundColor);
+                        pos.y += i;
+                        if (formattedMessage[i].Equals("\n"))
+                        {
+                            if (m_fastWrite.SetCursorPosition(pos))
+                                m_fastWrite.AddToBuffer(layer, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+                        }
                     }
                 }
             }
             else
             {
-                if(m_fastWrite.SetCursorPosition(pos))
+                if (m_fastWrite.SetCursorPosition(pos))
                 {
+                    int numLineBreaks = 0;
                     for (int i = 0; i < messageToPrint.Length; ++i)
                     {
-                        if (pos.x + i > bounds.x)
-                            break;
-
-                        if(messageToPrint[i] == '\n')
+                        if (messageToPrint[i] == '\n')
                         {
                             ++pos.y;
-                            if (!m_fastWrite.SetCursorPosition(pos) || pos.y + 1 <= bounds.y)
+                            ++numLineBreaks;
+                            if (!m_fastWrite.SetCursorPosition(pos) || numLineBreaks + 1 > bounds.y)
                                 break;
                         }
+
+                        if (i - (numLineBreaks * bounds.x) >= bounds.x)
+                            break;
 
                         if (messageToPrint[i] != '\n')
                             m_fastWrite.AddToBuffer(layer, messageToPrint[i], m_messageForegroundColor, m_messageBackgroundColor);
                     }
                 }
-                
             }
+
         }
 
         bool InWindowSpace(Vector2 relativePosition)
@@ -377,5 +388,7 @@ namespace AsciiProgram
 
             return false;
         }
+
+
     }
 }

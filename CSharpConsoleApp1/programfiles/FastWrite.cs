@@ -167,8 +167,7 @@ namespace FastConsole
         {
             if(!ValidCursorPosition(cursorPosition))
             {
-                cursorPosition.x = 0;
-                cursorPosition.y = 0;
+                return;
             }
 
             if (!ValidLayer(layer))
