@@ -180,12 +180,13 @@ namespace FastConsole
                 }
             }
 
+            /*
             if (input == '\n')
             {
                 ++cursorPosition.y;
                 cursorPosition.x = 0;
                 return;
-            }
+            }*/
 
             CharSetInfo temp = bufList[layer][GetBufferPos(cursorPosition.x, cursorPosition.y, layer)];
 
