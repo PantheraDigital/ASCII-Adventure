@@ -40,17 +40,20 @@ namespace AsciiProgram
 
             DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
             MovingEntity player = new MovingEntity(playerDisplay, controller);
+
             List<MovingEntity> players = new List<MovingEntity>();
             players.Add(player);
+
             Level level = new Level(levelLayout, players);
 
             int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
 
             LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
 
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 5), '-');
+            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 5), '-', ConsoleColor.Gray);
             quitWindow.SetMessage("Quitting game\n\n\n\nPress any key to leave");
             quitWindow.SetBorderChar('\\');
+            quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
 
             GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
@@ -152,6 +155,14 @@ namespace AsciiProgram
                     testWindow2.SetTextWrapping(true);
 
                     tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.DarkGray, ConsoleColor.Black, position), new ShowWindowTrigger(testWindow2, 2));
+                    break;
+
+                case '+'://end Tile
+                    GameWindow endWindow = new GameWindow(new Vector2(1, 1), new Vector2(12, 5), ' ', ConsoleColor.Magenta, ConsoleColor.Black);
+                    endWindow.SetMessage("Yup. Thats the end.", ConsoleColor.Cyan, ConsoleColor.Black);
+                    endWindow.SetTextWrapping(true);
+                    endWindow.SetBorderChar('+');
+                    tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.Green, ConsoleColor.Black, position), new ShowWindowTrigger(endWindow, 2));
                     break;
 
                 default://wall
