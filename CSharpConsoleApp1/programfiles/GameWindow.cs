@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using FastConsole;
 
@@ -232,24 +231,16 @@ namespace AsciiProgram
 
         void DrawText(int layer)
         {
-            //Vector2 bounds = m_windowSize;
             Vector2 pos = m_screenPosition;
 
             if (m_useBorder)
             {
                 pos.x += 1;
                 pos.y += 1;
-                //bounds.x -= 2;
-                //bounds.y -= 2;
             }
 
-
-
-            //AddLineToFormattedMessage(m_message, bounds, m_textWrapping);///
-
-            string debugtext = "lines" + m_formattedMessage.Count.ToString();
-
             int timesToLoop = 0;
+
             if (m_formattedMessage.Count > m_textBounds.y)
                 timesToLoop = m_textBounds.y;
             else
@@ -257,7 +248,6 @@ namespace AsciiProgram
 
             for (int i = 0; i < timesToLoop; ++i)
             {
-                debugtext = debugtext + "-" + m_formattedMessage[i];
                 m_fastWrite.SetCursorPosition(pos);
 
                 if (m_formattedMessage[i].Length > 0)
@@ -265,7 +255,6 @@ namespace AsciiProgram
 
                 pos.y += 1;
             }
-            m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, debugtext, m_messageForegroundColor, m_messageBackgroundColor);
         }
 
         void FormatText(string message, Vector2 bounds, bool textWrapping)

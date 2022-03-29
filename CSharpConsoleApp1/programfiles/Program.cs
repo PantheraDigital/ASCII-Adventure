@@ -18,6 +18,9 @@ namespace AsciiProgram
             
             */
 
+            int halfWindowWidth = (int)(Console.WindowWidth / 2);
+            int halfWindowHeight = (int)(Console.WindowHeight / 2);
+
             Console.CursorVisible = false;
 
 
@@ -40,22 +43,23 @@ namespace AsciiProgram
             players.Add(player);
             Level level = new Level(levelLayout, players);
 
-            int half = (int)(Console.WindowWidth / 2);
-            half = half - (int)(level.GetMaxDimentions().x / 2);
-            level.SetDrawOffset(new Vector2(half, 3));
+            int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
+            level.SetDrawOffset(new Vector2(levelCenter, 3));
 
-            LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(half, 3));
+            LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, 3));
 
-            GameWindow testWindow = new GameWindow(new Vector2(5, 5), new Vector2(3, 5), '/', ConsoleColor.White, ConsoleColor.DarkRed);
-            testWindow.SetMessage("Q\nu\ni\nt", ConsoleColor.Blue, ConsoleColor.Black);
-            //testWindow.SetBorderChar('*');
+            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth, halfWindowHeight), new Vector2(25, 5), '-');
+            quitWindow.SetMessage("Quitting game\n\n\n\nPress any key to leave");
+            quitWindow.SetBorderChar('\\');
 
-            GameWindow testWindow2 = new GameWindow(new Vector2(half, 5), new Vector2(6, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-            testWindow2.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
-            testWindow2.SetTextWrapping(true);
-            testWindow2.SetBorderChar('*');
+            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth, halfWindowHeight), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
+            startWindow.SetTextWrapping(true);
+            startWindow.SetBorderChar('*');
 
-            
+            startWindow.Draw(1);
+            Console.ReadKey(true);
+            startWindow.Erase();
 
             while (quit == false)
             {
@@ -70,13 +74,6 @@ namespace AsciiProgram
                 {
                     if (controller.GetInput().Key == ConsoleKey.Q)
                         quit = true;
-                    else if (controller.GetInput().Key == ConsoleKey.E)
-                    {
-                        testWindow2.Draw(1);
-                        Console.ReadKey(true);
-
-                        testWindow2.Erase();
-                    }
                 }
 
                 /*
@@ -102,7 +99,7 @@ namespace AsciiProgram
                 }*/
             }
 
-            testWindow.Draw(1);
+            quitWindow.Draw(1);
             Console.ReadKey(true);
         }
 
