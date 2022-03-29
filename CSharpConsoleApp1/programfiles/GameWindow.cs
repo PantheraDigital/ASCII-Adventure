@@ -11,10 +11,9 @@ namespace AsciiProgram
 {
     public class GameWindow
     {
-        //can add formatting options like center set text for message
-        //needs support for '\n'
         Vector2 m_screenPosition;
         Vector2 m_windowSize;
+        Vector2 m_textBounds;
 
         char m_backgroundChar;
         ConsoleColor m_windowForegroundColor;
@@ -46,6 +45,7 @@ namespace AsciiProgram
             m_backgroundChar = backgroundChar;
             m_borderChar = backgroundChar;
 
+
             m_windowForegroundColor = windowForegroundColor;
             m_windowBackgroundColor = windowBackgroundColor;
             m_messageForegroundColor = windowForegroundColor;
@@ -63,7 +63,14 @@ namespace AsciiProgram
 
             m_fastWrite = FastWrite.GetInstance();
             m_formattedMessage = new List<string>();
-            m_formattedMessage.Add("");
+
+            m_textBounds = m_windowSize;
+
+            if (m_useBorder)
+            {
+                m_textBounds.x -= 2;
+                m_textBounds.y -= 2;
+            }
         }
 
 
@@ -92,8 +99,9 @@ namespace AsciiProgram
         {
             if (size.x > 0 && size.y > 0)
             {
-                m_windowSize = size;
+                m_windowSize = size;                
                 m_updated = true;
+                UpdateTextBounds();
             }
         }
 
@@ -115,12 +123,16 @@ namespace AsciiProgram
         {
             m_message = message;
             m_updated = true;
+
+            UpdateTextBounds();
         }
         public void SetMessage(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
         {
             m_message = message;
             m_updated = true;
+
             SetMessageColors(foregroundColor, backgroundColor);
+            UpdateTextBounds();
         }
 
         public void SetBorderChar(char borderChar)
@@ -128,6 +140,7 @@ namespace AsciiProgram
             m_borderChar = borderChar;
             m_updated = true;
             m_useBorder = true;
+            UpdateTextBounds();
         }
 
         public void SetTextWrapping(bool textWrapping)
@@ -140,6 +153,7 @@ namespace AsciiProgram
         {
             m_useBorder = useBorder;
             m_updated = true;
+            UpdateTextBounds();
         }
 
         public void SetMessageColors(ConsoleColor foreground, ConsoleColor background)
@@ -175,7 +189,6 @@ namespace AsciiProgram
             DrawBackground(layer);
             DrawText(layer);
             
-
             m_fastWrite.DisplayBuffer();
         }
 
@@ -217,28 +230,28 @@ namespace AsciiProgram
             }
         }
 
-        void DrawText(int layer)//test to see if local save survies without commit
+        void DrawText(int layer)
         {
-            Vector2 bounds = m_windowSize;
+            //Vector2 bounds = m_windowSize;
             Vector2 pos = m_screenPosition;
 
             if (m_useBorder)
             {
                 pos.x += 1;
                 pos.y += 1;
-                bounds.x -= 2;
-                bounds.y -= 2;
+                //bounds.x -= 2;
+                //bounds.y -= 2;
             }
 
 
 
-            AddLineToFormattedMessage(m_message, bounds, m_textWrapping);///
+            //AddLineToFormattedMessage(m_message, bounds, m_textWrapping);///
 
             string debugtext = "lines" + m_formattedMessage.Count.ToString();
 
             int timesToLoop = 0;
-            if (m_formattedMessage.Count > bounds.y)
-                timesToLoop = bounds.y;
+            if (m_formattedMessage.Count > m_textBounds.y)
+                timesToLoop = m_textBounds.y;
             else
                 timesToLoop = m_formattedMessage.Count;
 
@@ -255,120 +268,13 @@ namespace AsciiProgram
             m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, debugtext, m_messageForegroundColor, m_messageBackgroundColor);
         }
 
-
-        List<string> FormatMessage(string messageToPrint, Vector2 bounds, bool textWrapping)
+        void FormatText(string message, Vector2 bounds, bool textWrapping)
         {
-            
-            List<string> formattedMessage = new List<string>();
-            /*
-            string[] lines = messageToPrint.Split('\n');
-            foreach(string line in lines)
-            {
-                AddLineToFormattedMessage(line, bounds, textWrapping);
-            }*/
-
-            /*string[] words = messageToPrint.Split(' ');
-            
-            foreach (string word in words)
-            {
-                AddWordToFormattedMessage(word, bounds, textWrapping);
-            }*/
-
-            /*
-            if (textWrapping && messageToPrint.Length > bounds.x)
-            {
-                string[] lines = messageToPrint.Split(' ');
-                StringBuilder line = new StringBuilder();
-
-                foreach (string word in lines)
-                {
-                    if(word.Contains('\n') || word.Length > bounds.x)
-                    {
-                        string cutWord = "";
-                        foreach(char letter in word)
-                        {
-                            bool addWord = false;
-                            if (letter == '\n')
-                            {
-                                addWord = true;
-                            }
-                            else
-                                cutWord = cutWord + letter;
-
-                            if ((cutWord + line).Length == bounds.x)
-                                addWord = true;
-
-                            if(addWord)
-                            {
-                                if ((cutWord + line).Length <= bounds.x)
-                                    line.Append(cutWord + " ");
-                                else
-                                {
-                                    formattedMessage.Add(line.ToString().Trim());
-                                    line.Clear();
-                                    line.Append(cutWord);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if ((line + word).Length <= bounds.x)//word fits
-                        {
-                            line.Append(word + " ");
-                        }
-                        else //word in line too large
-                        {
-                            if (line.Length > 0)
-                            {
-                                formattedMessage.Add(line.ToString().Trim());
-                                line.Clear();
-                            }
-
-                            line.Append(word + " ");
-                        }
-                    }
-
-
-                }
-
-                if (line.Length > 0 && line.Length <= bounds.x)
-                {
-                    formattedMessage.Add(line.ToString().Trim());
-                }
-            }
-            else
-            {
-                int numLineBreaks = 0;
-                string line = "";
-                foreach(char letter in messageToPrint)
-                {
-                    if (letter == '\n')
-                    {
-                        ++numLineBreaks;
-
-                        formattedMessage.Add(line);
-                        line = "";
-                    }
-
-                    if ((line + letter).Length > bounds.x || formattedMessage.Count >= bounds.y)
-                        break;
-
-                    if (letter != '\n')
-                        line = line + letter;
-                }
-
-                if (line.Length > 0 && line.Length <= bounds.x)
-                    formattedMessage.Add(line);
-            }
-            */
-            return formattedMessage;
-        }
-
-        void AddLineToFormattedMessage(string line, Vector2 bounds, bool textWrapping)
-        {
-            string[] words = line.Split(' ');
+            string[] words = message.Split(' ');
             StringBuilder formattedLine = new StringBuilder();
+
+            if (m_formattedMessage.Count == 0)
+                m_formattedMessage.Add("");
 
             int lineIndex = m_formattedMessage.Count - 1;
             
@@ -487,6 +393,25 @@ namespace AsciiProgram
             }
 
             m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+        }
+
+        void UpdateTextBounds()
+        {
+            if(m_useBorder)
+            {
+                Vector2 temp = m_windowSize;
+                temp.x -= 2;
+                temp.y -= 2;
+
+                m_textBounds = temp;                                    
+            }
+            else
+            {
+                m_textBounds = m_windowSize;            
+            }
+            
+            m_formattedMessage.Clear();
+            FormatText(m_message, m_textBounds, m_textWrapping);            
         }
     }
 }
