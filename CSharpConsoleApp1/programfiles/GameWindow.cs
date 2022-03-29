@@ -219,10 +219,8 @@ namespace AsciiProgram
 
         void DrawText(int layer)//test to see if local save survies without commit
         {
-            string messageToPrint = m_message;
             Vector2 bounds = m_windowSize;
             Vector2 pos = m_screenPosition;
-
 
             if (m_useBorder)
             {
@@ -231,49 +229,32 @@ namespace AsciiProgram
                 bounds.x -= 2;
                 bounds.y -= 2;
             }
-            
-            List<string> formattedMessage = FormatMessage(m_message, bounds, m_textWrapping);
-            /*
-            FormatMessage(m_message, bounds, m_textWrapping);
+
+
+
+            AddLineToFormattedMessage(m_message, bounds, m_textWrapping);///
+
             string debugtext = "lines" + m_formattedMessage.Count.ToString();
 
-            for (int i = 0; i < m_formattedMessage.Count; ++i)
-            {
-                debugtext = debugtext + "-" + m_formattedMessage[i];
-
-                m_fastWrite.SetCursorPosition(pos);
-                if (m_formattedMessage[i].Length > 0)
-                    m_fastWrite.AddToBuffer(layer, m_formattedMessage[i].Trim(' '), m_messageForegroundColor, m_messageBackgroundColor);
-
-                pos.y += 1;
-            }
-
-            m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, debugtext, m_messageForegroundColor, m_messageBackgroundColor);*/
-            //m_formattedMessage[10].Trim();
-
             int timesToLoop = 0;
-            if (formattedMessage.Count > bounds.y)
+            if (m_formattedMessage.Count > bounds.y)
                 timesToLoop = bounds.y;
             else
-                timesToLoop = formattedMessage.Count;
+                timesToLoop = m_formattedMessage.Count;
 
             for (int i = 0; i < timesToLoop; ++i)
             {
+                debugtext = debugtext + "-" + m_formattedMessage[i];
                 m_fastWrite.SetCursorPosition(pos);
 
                 if (m_formattedMessage[i].Length > 0)
-                    m_fastWrite.AddToBuffer(layer, m_formattedMessage[i].Trim(' '), m_messageForegroundColor, m_messageBackgroundColor);
+                    m_fastWrite.AddToBuffer(layer, m_formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+
+                pos.y += 1;
             }
+            m_fastWrite.AddToBuffer(m_screenPosition.x, m_screenPosition.y - 1, layer, debugtext, m_messageForegroundColor, m_messageBackgroundColor);
         }
 
-        /*bool InWindowSpace(Vector2 relativePosition)
-        {
-            if (relativePosition.x >= 0 && relativePosition.x <= m_windowSize.x)
-                if (relativePosition.y >= 0 && relativePosition.y <= m_windowSize.y)
-                    return true;
-
-            return false;
-        }*/
 
         List<string> FormatMessage(string messageToPrint, Vector2 bounds, bool textWrapping)
         {
@@ -293,7 +274,7 @@ namespace AsciiProgram
                 AddWordToFormattedMessage(word, bounds, textWrapping);
             }*/
 
-
+            /*
             if (textWrapping && messageToPrint.Length > bounds.x)
             {
                 string[] lines = messageToPrint.Split(' ');
@@ -380,122 +361,132 @@ namespace AsciiProgram
                 if (line.Length > 0 && line.Length <= bounds.x)
                     formattedMessage.Add(line);
             }
-
+            */
             return formattedMessage;
         }
 
-        void AddWordToFormattedMessage(string word, Vector2 bounds, bool textWrapping)
-        {
-            int maxIndex = m_formattedMessage.Count - 1;
-
-            if (maxIndex < 0)
-                maxIndex = 0;
-         
-            //word does not fit
-            if(m_formattedMessage.Count >= bounds.y && (word + m_formattedMessage[maxIndex]).Length > bounds.x)
-                return;
-
-            
-            //no line break and word fits in a line
-            if (!word.Contains('\n') && word.Length <= bounds.x)
-            {
-                //word fits in line
-                if ((word + m_formattedMessage[maxIndex]).Length <= bounds.x)
-                {
-                    if ((word + m_formattedMessage[maxIndex]).Length + 1 <= bounds.x)
-                        m_formattedMessage[maxIndex] = m_formattedMessage[maxIndex] + word + " ";
-                    else
-                        m_formattedMessage[maxIndex] = m_formattedMessage[maxIndex] + word;
-
-                }
-                else
-                {
-                    if(textWrapping && m_formattedMessage.Count <= bounds.y)
-                    {
-                        //m_formattedMessage[maxIndex] = m_formattedMessage[maxIndex].Trim();
-                        m_formattedMessage.Add(word);
-                    }
-                }
-            }
-            else//word has line break or longer than line
-            {
-                StringBuilder cutWord = new StringBuilder();
-
-                foreach (char letter in word)
-                {
-                    if (letter == '\n')
-                    {
-                        if (cutWord.Length > 0)
-                        {
-                            AddWordToFormattedMessage(cutWord.ToString(), bounds, textWrapping);
-                            cutWord.Clear();
-                        }
-                        if (m_formattedMessage.Count < bounds.y)
-                            m_formattedMessage.Add("");
-                    }
-
-
-                    if (letter != '\n')
-                    {
-                        if (!textWrapping && (cutWord + m_formattedMessage[maxIndex]).Length == bounds.x)
-                        {
-                            break;
-                        }
-
-                        cutWord.Append(letter);
-                    }
-                        
-                
-                    
-
-                
-                }
-
-                if(cutWord.Length > 0)
-                {
-                    AddWordToFormattedMessage(cutWord.ToString(), bounds, textWrapping);
-                    
-                }
-            }
-        }
-
-        void AddLineToFormattedMessage(string line, Vector2 bounds, bool textWrapping, bool addToLastLine = false)
+        void AddLineToFormattedMessage(string line, Vector2 bounds, bool textWrapping)
         {
             string[] words = line.Split(' ');
             StringBuilder formattedLine = new StringBuilder();
 
+            int lineIndex = m_formattedMessage.Count - 1;
+            
+            if (lineIndex < 0)
+                lineIndex = 0;
 
-            if(textWrapping)
+
+
+            foreach(string word in words)
             {
-                foreach (string word in words)
+                if(textWrapping && m_formattedMessage[lineIndex].Length == bounds.x)
                 {
-
+                    m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+                    m_formattedMessage.Add("");
+                    ++lineIndex;
                 }
-            }
-            else
-            {
-                int numLineBreaks = 0;
-                foreach (char letter in line)
-                {
-                    if (letter == '\n')
-                    {
-                        ++numLineBreaks;
 
-                        m_formattedMessage.Add(formattedLine.ToString());
-                        formattedLine.Clear();
+                if (!textWrapping && (word + m_formattedMessage[lineIndex]).Length > bounds.x && !String.IsNullOrEmpty(m_formattedMessage[0]))
+                    break;
+
+                if(word.Length > bounds.x || word.Contains('\n'))
+                {
+                    //cut out newlines and make word fit on line
+                    string wordCopy = word;
+                    do
+                    {
+                        if (textWrapping && m_formattedMessage[lineIndex].Length == bounds.x)
+                        {
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+                            m_formattedMessage.Add("");
+                            ++lineIndex;
+                        }
+
+                        if(wordCopy.Contains('\n'))
+                        {
+                            int cutWordLength;
+                            string cutWord;
+                            bool add1 = false;
+                            bool longWord = false;//if a word longer than bounds has a /n
+
+                            if (wordCopy.IndexOf('\n') + m_formattedMessage[lineIndex].Length > bounds.x)
+                            {
+                                longWord = true;
+                                cutWordLength = bounds.x - m_formattedMessage[lineIndex].Length;
+                            }
+                            else
+                            {
+                                add1 = true;
+                                cutWordLength = wordCopy.IndexOf('\n');
+                            }
+
+                            cutWord = wordCopy.Substring(0, cutWordLength);
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + cutWord;
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+                            m_formattedMessage.Add("");
+                            ++lineIndex;
+
+                            if (add1)
+                                cutWordLength += 1;
+
+                            wordCopy = wordCopy.Remove(0, cutWordLength);
+                            if (longWord && !textWrapping)
+                                wordCopy = "";
+                        }
+                        else
+                        {
+                            int cutWordLength;
+                            string cutWord;
+
+                            if (wordCopy.Length > bounds.x - m_formattedMessage[lineIndex].Length)
+                                cutWordLength = bounds.x - m_formattedMessage[lineIndex].Length;
+                            else
+                                cutWordLength = wordCopy.Length;
+
+                            cutWord = wordCopy.Substring(0, cutWordLength);
+                            //add cutWord 
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + cutWord;
+                            //remove
+                            wordCopy = wordCopy.Remove(0, cutWordLength);
+                        }
+
+                    } while (wordCopy.Contains('\n') || wordCopy.Length > bounds.x);
+
+                    if (wordCopy.Length > 0)
+                    {
+                        if ((wordCopy + m_formattedMessage[lineIndex]).Length + 1 <= bounds.x)
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + wordCopy + " ";
+                        else if ((wordCopy + m_formattedMessage[lineIndex]).Length <= bounds.x)
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + wordCopy;
+                        else if(textWrapping)
+                        {
+                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+                            m_formattedMessage.Add(wordCopy);
+                            ++lineIndex;
+                        }
                     }
 
-                    if ((formattedLine.Length + 1) > bounds.x || m_formattedMessage.Count >= bounds.y)
-                        break;
-
-                    if (letter != '\n')
-                        formattedLine.Append(letter);
                 }
-
-                if (formattedLine.Length > 0 && formattedLine.Length <= bounds.x)
-                    m_formattedMessage.Add(formattedLine.ToString());
+                else
+                {
+                    if((word + m_formattedMessage[lineIndex]).Length + 1 <= bounds.x)
+                    {
+                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + word + " ";
+                    }
+                    else if((word + m_formattedMessage[lineIndex]).Length <= bounds.x)
+                    {
+                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + word;
+                    }
+                    else if(textWrapping)
+                    {
+                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
+                        m_formattedMessage.Add(word);
+                        ++lineIndex;
+                    }
+                }
             }
 
+            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
         }
     }
 }
