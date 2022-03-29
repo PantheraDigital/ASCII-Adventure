@@ -45,15 +45,14 @@ namespace AsciiProgram
             Level level = new Level(levelLayout, players);
 
             int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
-            //level.SetDrawOffset(new Vector2(levelCenter, 3));
 
-            LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, 3));
+            LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
 
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth, halfWindowHeight), new Vector2(25, 5), '-');
+            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 5), '-');
             quitWindow.SetMessage("Quitting game\n\n\n\nPress any key to leave");
             quitWindow.SetBorderChar('\\');
 
-            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth, halfWindowHeight), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
             startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
