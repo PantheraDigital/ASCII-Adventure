@@ -17,6 +17,7 @@ namespace AsciiProgram
             Console.Write('\u2592');//unicode
             
             */
+            Console.SetWindowSize(80, 40);
 
             int halfWindowWidth = (int)(Console.WindowWidth / 2);
             int halfWindowHeight = (int)(Console.WindowHeight / 2);
@@ -44,7 +45,7 @@ namespace AsciiProgram
             Level level = new Level(levelLayout, players);
 
             int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
-            level.SetDrawOffset(new Vector2(levelCenter, 3));
+            //level.SetDrawOffset(new Vector2(levelCenter, 3));
 
             LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, 3));
 

@@ -11,7 +11,6 @@ namespace AsciiProgram
     {
         List<List<Tile>> m_tiles;
         List<MovingEntity> m_movingEntities;
-        Vector2 m_drawOffset;
         Vector2 m_maxDimensions;
 
 
@@ -30,11 +29,6 @@ namespace AsciiProgram
             }
 
             m_maxDimensions = temp;
-        }
-        public Level(List<List<Tile>> tiles, List<MovingEntity> movingEntities, Vector2 drawOffset)
-            : this(tiles, movingEntities)
-        {
-            m_drawOffset = drawOffset;
         }
 
         public void Update()
@@ -65,10 +59,6 @@ namespace AsciiProgram
             }
         }
 
-        public void SetDrawOffset(Vector2 offset)
-        {
-            m_drawOffset = offset;
-        }
 
         bool ValidateMove(Vector2 positionToValidate)
         {
