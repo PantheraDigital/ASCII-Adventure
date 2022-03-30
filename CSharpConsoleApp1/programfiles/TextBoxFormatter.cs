@@ -5,6 +5,8 @@ using System.Text;
 
 namespace AsciiProgram
 {
+    //fits text into bounds
+    //returns a list of each line of text formatted to fit in box
     class TextBoxFormatter
     {
         List<string> m_text;
@@ -31,7 +33,7 @@ namespace AsciiProgram
             {
                 if (textWrapping && m_text[lineIndex].Length == bounds.x)
                 {
-                    m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+                    m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
                     m_text.Add("");
                     ++lineIndex;
                 }
@@ -43,11 +45,12 @@ namespace AsciiProgram
                 {
                     //cut out newlines and make word fit on line
                     string wordCopy = word;
-                    do
+
+                    do//while wordCopy contains'\n' or is longer than bounds.x
                     {
                         if (textWrapping && m_text[lineIndex].Length == bounds.x)
                         {
-                            m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
                             m_text.Add("");
                             ++lineIndex;
                         }
@@ -72,7 +75,7 @@ namespace AsciiProgram
 
                             cutWord = wordCopy.Substring(0, cutWordLength);
                             m_text[lineIndex] = m_text[lineIndex] + cutWord;
-                            m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
                             m_text.Add("");
                             ++lineIndex;
 
@@ -94,13 +97,12 @@ namespace AsciiProgram
                                 cutWordLength = wordCopy.Length;
 
                             cutWord = wordCopy.Substring(0, cutWordLength);
-                            //add cutWord 
                             m_text[lineIndex] = m_text[lineIndex] + cutWord;
-                            //remove
                             wordCopy = wordCopy.Remove(0, cutWordLength);
                         }
 
                     } while (wordCopy.Contains('\n') || wordCopy.Length > bounds.x);
+
 
                     if (wordCopy.Length > 0)
                     {
@@ -110,14 +112,14 @@ namespace AsciiProgram
                             m_text[lineIndex] = m_text[lineIndex] + wordCopy;
                         else if (textWrapping)
                         {
-                            m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
                             m_text.Add(wordCopy);
                             ++lineIndex;
                         }
                     }
 
                 }
-                else
+                else //word can fit in a line and contains no '\n'
                 {
                     if ((word + m_text[lineIndex]).Length + 1 <= bounds.x)
                     {
@@ -129,14 +131,14 @@ namespace AsciiProgram
                     }
                     else if (textWrapping)
                     {
-                        m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+                        m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
                         m_text.Add(word);
                         ++lineIndex;
                     }
                 }
             }
 
-            m_text[lineIndex] = m_text[lineIndex].Trim(' ');
+            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
 
             return m_text;
         }
@@ -145,5 +147,6 @@ namespace AsciiProgram
         {
             return m_text;
         }
+
     }
 }
