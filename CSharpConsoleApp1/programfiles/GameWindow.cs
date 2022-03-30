@@ -18,9 +18,9 @@ namespace AsciiProgram
         ConsoleColor m_windowForegroundColor;
         ConsoleColor m_windowBackgroundColor;
 
+        TextBoxFormatter m_messageFormatter;
         bool m_textWrapping;
         string m_message;
-        List<string> m_formattedMessage;
         ConsoleColor m_messageForegroundColor;
         ConsoleColor m_messageBackgroundColor;
 
@@ -61,7 +61,7 @@ namespace AsciiProgram
             m_layer = 0;
 
             m_fastWrite = FastWrite.GetInstance();
-            m_formattedMessage = new List<string>();
+            m_messageFormatter = new TextBoxFormatter();
 
             m_textBounds = m_windowSize;
 
@@ -240,148 +240,22 @@ namespace AsciiProgram
             }
 
             int timesToLoop = 0;
+            List<string> formattedMessage = m_messageFormatter.GetFormattedText();
 
-            if (m_formattedMessage.Count > m_textBounds.y)
+            if (formattedMessage.Count > m_textBounds.y)
                 timesToLoop = m_textBounds.y;
             else
-                timesToLoop = m_formattedMessage.Count;
+                timesToLoop = formattedMessage.Count;
 
             for (int i = 0; i < timesToLoop; ++i)
             {
                 m_fastWrite.SetCursorPosition(pos);
 
-                if (m_formattedMessage[i].Length > 0)
-                    m_fastWrite.AddToBuffer(layer, m_formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+                if (formattedMessage[i].Length > 0)
+                    m_fastWrite.AddToBuffer(layer, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
 
                 pos.y += 1;
             }
-        }
-
-        void FormatText(string message, Vector2 bounds, bool textWrapping)
-        {
-            string[] words = message.Split(' ');
-            StringBuilder formattedLine = new StringBuilder();
-
-            if (m_formattedMessage.Count == 0)
-                m_formattedMessage.Add("");
-
-            int lineIndex = m_formattedMessage.Count - 1;
-            
-            if (lineIndex < 0)
-                lineIndex = 0;
-
-
-
-            foreach(string word in words)
-            {
-                if(textWrapping && m_formattedMessage[lineIndex].Length == bounds.x)
-                {
-                    m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
-                    m_formattedMessage.Add("");
-                    ++lineIndex;
-                }
-
-                if (!textWrapping && (word + m_formattedMessage[lineIndex]).Length > bounds.x && !String.IsNullOrEmpty(m_formattedMessage[0]))
-                    break;
-
-                if(word.Length > bounds.x || word.Contains('\n'))
-                {
-                    //cut out newlines and make word fit on line
-                    string wordCopy = word;
-                    do
-                    {
-                        if (textWrapping && m_formattedMessage[lineIndex].Length == bounds.x)
-                        {
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
-                            m_formattedMessage.Add("");
-                            ++lineIndex;
-                        }
-
-                        if(wordCopy.Contains('\n'))
-                        {
-                            int cutWordLength;
-                            string cutWord;
-                            bool add1 = false;
-                            bool longWord = false;//if a word longer than bounds has a /n
-
-                            if (wordCopy.IndexOf('\n') + m_formattedMessage[lineIndex].Length > bounds.x)
-                            {
-                                longWord = true;
-                                cutWordLength = bounds.x - m_formattedMessage[lineIndex].Length;
-                            }
-                            else
-                            {
-                                add1 = true;
-                                cutWordLength = wordCopy.IndexOf('\n');
-                            }
-
-                            cutWord = wordCopy.Substring(0, cutWordLength);
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + cutWord;
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
-                            m_formattedMessage.Add("");
-                            ++lineIndex;
-
-                            if (add1)
-                                cutWordLength += 1;
-
-                            wordCopy = wordCopy.Remove(0, cutWordLength);
-                            if (longWord && !textWrapping)
-                                wordCopy = "";
-                        }
-                        else
-                        {
-                            int cutWordLength;
-                            string cutWord;
-
-                            if (wordCopy.Length > bounds.x - m_formattedMessage[lineIndex].Length)
-                                cutWordLength = bounds.x - m_formattedMessage[lineIndex].Length;
-                            else
-                                cutWordLength = wordCopy.Length;
-
-                            cutWord = wordCopy.Substring(0, cutWordLength);
-                            //add cutWord 
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + cutWord;
-                            //remove
-                            wordCopy = wordCopy.Remove(0, cutWordLength);
-                        }
-
-                    } while (wordCopy.Contains('\n') || wordCopy.Length > bounds.x);
-
-                    if (wordCopy.Length > 0)
-                    {
-                        if ((wordCopy + m_formattedMessage[lineIndex]).Length + 1 <= bounds.x)
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + wordCopy + " ";
-                        else if ((wordCopy + m_formattedMessage[lineIndex]).Length <= bounds.x)
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + wordCopy;
-                        else if(textWrapping)
-                        {
-                            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
-                            m_formattedMessage.Add(wordCopy);
-                            ++lineIndex;
-                        }
-                    }
-
-                }
-                else
-                {
-                    if((word + m_formattedMessage[lineIndex]).Length + 1 <= bounds.x)
-                    {
-                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + word + " ";
-                    }
-                    else if((word + m_formattedMessage[lineIndex]).Length <= bounds.x)
-                    {
-                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex] + word;
-                    }
-                    else if(textWrapping)
-                    {
-                        m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
-                        m_formattedMessage.Add(word);
-                        ++lineIndex;
-                    }
-                }
-            }
-
-            m_formattedMessage[lineIndex] = m_formattedMessage[lineIndex].Trim(' ');
         }
 
         void UpdateTextBounds()
@@ -398,9 +272,8 @@ namespace AsciiProgram
             {
                 m_textBounds = m_windowSize;            
             }
-            
-            m_formattedMessage.Clear();
-            FormatText(m_message, m_textBounds, m_textWrapping);            
+
+            m_messageFormatter.FormatText(m_message, m_textBounds, m_textWrapping);
         }
     }
 }

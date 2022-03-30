@@ -57,6 +57,7 @@
     <Compile Include="programfiles\MovingEntity.cs" />
     <Compile Include="programfiles\PlayerController.cs" />
     <Compile Include="programfiles\Program.cs" />
+    <Compile Include="programfiles\TextBoxFormatter.cs" />
     <Compile Include="programfiles\Tile.cs" />
     <Compile Include="programfiles\Vector2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
