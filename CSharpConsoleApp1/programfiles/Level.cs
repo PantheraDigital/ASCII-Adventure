@@ -13,11 +13,16 @@ namespace AsciiProgram
         List<MovingEntity> m_movingEntities;
         Vector2 m_maxDimensions;
 
+        Vector2 m_playerSpawn;
+        Dictionary<Vector2, GameObject> m_gameObjects;
 
-        public Level(List<List<Tile>> tiles, List<MovingEntity> movingEntities)
+
+        public Level(List<List<Tile>> tiles, List<MovingEntity> movingEntities, Dictionary<Vector2, GameObject> gameObjects, Vector2 playerSpawn)
         {
             m_tiles = tiles;
             m_movingEntities = movingEntities;
+            m_gameObjects = gameObjects;
+            m_playerSpawn = playerSpawn;
 
 
             Vector2 temp = new Vector2(0, 0);
@@ -49,13 +54,23 @@ namespace AsciiProgram
                 {
                     if (ValidateMove(m_movingEntities[i].GetMoveLocation()))
                     {
-                        m_movingEntities[i].Move();
+                        if (m_gameObjects.ContainsKey(m_movingEntities[i].GetCurrentPosition()))
+                            m_gameObjects[m_movingEntities[i].GetCurrentPosition()].EndCollide();
 
+                        m_movingEntities[i].Move();
 
                         Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
                         m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
+
+                        if (m_gameObjects.ContainsKey(coverdTilePos))
+                            m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);
                     }
                 }
+            }
+
+            foreach(Vector2 key in m_gameObjects.Keys)
+            {
+                m_gameObjects[key].Update();
             }
         }
 
@@ -120,6 +135,22 @@ namespace AsciiProgram
         public int GetNumMovingEntities()
         {
             return m_movingEntities.Count;
+        }
+
+        public bool ValidateGameObjectKey(Vector2 keyLocation)
+        {
+            if (m_gameObjects.ContainsKey(keyLocation))
+                return true;
+            else
+                return false;
+        }
+
+        public GameObject GetGameObject(Vector2 keyLocation)
+        {
+            if (m_gameObjects.ContainsKey(keyLocation))
+                return m_gameObjects[keyLocation];
+            else
+                return null;
         }
     }
 }
