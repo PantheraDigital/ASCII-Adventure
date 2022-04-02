@@ -46,14 +46,15 @@ namespace AsciiProgram
         public override void EndCollide()
         {
             m_active = false;
+
+            m_window.Erase();
         }
 
         public override void OnDraw()
         {
-            if (m_active)
-                m_window.Draw(4);
-            else
-                m_window.Erase();
+            m_window.Draw(4);
+            Console.ReadKey(true);
+            m_window.Erase();
         }
     }
 }
