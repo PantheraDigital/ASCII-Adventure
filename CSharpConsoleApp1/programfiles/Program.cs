@@ -150,10 +150,6 @@ namespace AsciiProgram
                     tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
-                case '0'://spawn
-                    tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
-                    break;
-
                 case '='://wall
                     tileToAdd = new Tile(new DisplayObject(tileType, ConsoleColor.Gray, ConsoleColor.Black, position));
                     tileToAdd.m_solid = true;
