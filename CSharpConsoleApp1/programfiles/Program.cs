@@ -163,21 +163,6 @@ namespace AsciiProgram
                     tileToAdd = new Tile(new DisplayObject('.', ConsoleColor.DarkGray, ConsoleColor.Black, position));
                     break;
 
-                case '*'://message tile
-                    GameWindow testWindow2 = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-                    testWindow2.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
-                    testWindow2.SetTextWrapping(true);
-
-                    tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.DarkGray, ConsoleColor.Black, position), new ShowWindowTrigger(testWindow2, 2));
-                    break;
-
-                case '+'://end Tile
-                    GameWindow endWindow = new GameWindow(new Vector2(1, 1), new Vector2(12, 5), ' ', ConsoleColor.Magenta, ConsoleColor.Black);
-                    endWindow.SetMessage("Yup. Thats the end.", ConsoleColor.Cyan, ConsoleColor.Black);
-                    endWindow.SetTextWrapping(true);
-                    endWindow.SetBorderChar('+');
-                    tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.Green, ConsoleColor.Black, position), new ShowWindowTrigger(endWindow, 2));
-                    break;
             }
 
             return tileToAdd;
