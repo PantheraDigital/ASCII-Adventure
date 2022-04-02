@@ -18,7 +18,7 @@ namespace AsciiProgram
         }
 
         public virtual void Update() { }
-        public virtual void OnCollide() { }
+        public virtual void OnCollide(MovingEntity collider) { }
     }
 }
 

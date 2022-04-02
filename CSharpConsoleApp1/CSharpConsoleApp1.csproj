@@ -45,10 +45,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="programfiles\FastWrite.cs" />
+    <Compile Include="programfiles\Controller.cs" />
+    <Compile Include="programfiles\DisplayObject.cs" />
+    <Compile Include="programfiles\Entity.cs" />
+    <Compile Include="programfiles\Tools\FastWrite.cs" />
+    <Compile Include="programfiles\GameObject.cs" />
+    <Compile Include="programfiles\GameWindow.cs" />
+    <Compile Include="programfiles\Level.cs" />
+    <Compile Include="programfiles\LevelCamera.cs" />
+    <Compile Include="programfiles\LevelLayouts.cs" />
+    <Compile Include="programfiles\MovingEntity.cs" />
+    <Compile Include="programfiles\PlayerController.cs" />
     <Compile Include="programfiles\Program.cs" />
+    <Compile Include="programfiles\Tools\TextBoxFormatter.cs" />
     <Compile Include="programfiles\Tile.cs" />
-    <Compile Include="programfiles\Vector2.cs" />
+    <Compile Include="programfiles\Tools\Vector2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,2 +1,2 @@
 # ASCII-Adventure
-Some ascii console games
+Some base work to allow for making console games with ascii characters 
