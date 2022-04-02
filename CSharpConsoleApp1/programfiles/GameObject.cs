@@ -39,6 +39,8 @@ namespace AsciiProgram
         public override void OnCollide(MovingEntity other)
         {
             m_active = true;
+
+            m_window.Draw(4);
         }
 
         public override void EndCollide()

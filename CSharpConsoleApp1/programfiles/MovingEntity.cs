@@ -30,9 +30,9 @@ namespace AsciiProgram
 
             m_controller.Update();
 
-            if (m_moved)
-                m_moved = false;
-            else
+            //if (m_moved)
+            //    m_moved = false;
+            //else
                 m_movePosition = m_displayObject.m_displayPosition;
 
 

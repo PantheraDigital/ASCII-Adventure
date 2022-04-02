@@ -17,7 +17,7 @@ namespace AsciiProgram
         Dictionary<Vector2, GameObject> m_gameObjects;
 
 
-        public Level(List<List<Tile>> tiles, List<MovingEntity> movingEntities, Dictionary<Vector2, GameObject> gameObjects, Vector2 playerSpawn)
+        public Level(List<List<Tile>> tiles, List<MovingEntity> movingEntities, Dictionary<Vector2, GameObject> gameObjects, Vector2 playerSpawn, MovingEntity player)
         {
             m_tiles = tiles;
             m_movingEntities = movingEntities;
@@ -34,6 +34,7 @@ namespace AsciiProgram
             }
 
             m_maxDimensions = temp;
+            player.SetPosition(m_playerSpawn);
         }
 
         public void Update()
@@ -44,6 +45,11 @@ namespace AsciiProgram
                 {
                     m_tiles[y][x].Update();
                 }
+            }
+
+            foreach (Vector2 key in m_gameObjects.Keys)
+            {
+                m_gameObjects[key].Update();
             }
 
             for (int i = 0; i < m_movingEntities.Count; ++i)
@@ -66,11 +72,6 @@ namespace AsciiProgram
                             m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);
                     }
                 }
-            }
-
-            foreach(Vector2 key in m_gameObjects.Keys)
-            {
-                m_gameObjects[key].Update();
             }
         }
 

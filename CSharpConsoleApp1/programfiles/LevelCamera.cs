@@ -89,8 +89,14 @@ namespace AsciiProgram
                 int levelSpaceY = m_cameraPosition.y + key.y;
                 int levelSpaceX = m_cameraPosition.x + key.x;
 
+                //check for game objects
+                if(currentLevel.ValidateGameObjectKey(new Vector2(levelSpaceX, levelSpaceY)))
+                {
+                    if (!m_displayList[key].display.IsEqual(currentLevel.GetGameObject(new Vector2(levelSpaceX, levelSpaceY)).m_displayObject))
+                        m_displayList[key] = new DisplayData(currentLevel.GetGameObject(new Vector2(levelSpaceX, levelSpaceY)).m_displayObject, true);
+                }
                 //if position has a tile (if position in camera space has a tile in it)
-                if (currentLevel.ValidTile(levelSpaceX, levelSpaceY))
+                else if (currentLevel.ValidTile(levelSpaceX, levelSpaceY))
                 {
                     //lookup display object at screenspace location
                     //if not equal to display at location in level

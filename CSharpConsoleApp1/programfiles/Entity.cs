@@ -24,5 +24,10 @@ namespace AsciiProgram
         {
             return m_displayObject.m_displayPosition;
         }
+
+        public virtual void SetPosition(Vector2 position)
+        {
+            m_displayObject.m_displayPosition = position;
+        }
     }
 }

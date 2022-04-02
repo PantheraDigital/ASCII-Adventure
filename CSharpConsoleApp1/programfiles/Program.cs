@@ -25,10 +25,6 @@ namespace AsciiProgram
             Console.CursorVisible = false;
 
 
-            List<List<Tile>> levelLayout;
-
-
-            levelLayout = SetUpLevel(LevelLayouts.mazeLevel1);
 
             FastConsole.FastWrite.InitializeBuffer();
 
@@ -44,14 +40,14 @@ namespace AsciiProgram
             List<MovingEntity> players = new List<MovingEntity>();
             players.Add(player);
 
-            Level level = new Level(levelLayout, players);
+            Level level = SetUpLevel(LevelLayouts.mazeLevel1, player);
 
             int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
 
             LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
 
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 5), '-', ConsoleColor.Gray);
-            quitWindow.SetMessage("Quitting game\n\n\n\nPress any key to leave");
+            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
+            quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
             quitWindow.SetBorderChar('\\');
             quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
 
@@ -106,10 +102,17 @@ namespace AsciiProgram
             Console.ReadKey(true);
         }
 
-        public static List<List<Tile>> SetUpLevel(string levelLayout)
+        public static Level SetUpLevel(string levelLayout, MovingEntity player)
         {
             List<List<Tile>> layout = new List<List<Tile>>();
+            Dictionary<Vector2, GameObject> gameObjects = new Dictionary<Vector2, GameObject>();
+            List<MovingEntity> entities = new List<MovingEntity>();
+            Vector2 spawn = new Vector2(0,0);
+
             string[] rows = levelLayout.Split('\n');
+
+            entities.Add(player);
+
             
             for(int y = 0; y < rows.Length; ++y)
             {
@@ -119,12 +122,23 @@ namespace AsciiProgram
 
                     for (int x = 0; x < rows[y].Length; ++x)
                     {
-                        layout[y].Add(CreateTile(rows[y][x], new Vector2(x, y)));
+                        Tile tempTile = CreateTile(rows[y][x], new Vector2(x, y));
+                        if (tempTile != null)
+                            layout[y].Add(tempTile);
+                        else
+                            layout[y].Add(CreateTile('.', new Vector2(x, y)));
+
+                        GameObject gameObject = CreateGameObject(rows[y][x], new Vector2(x, y));
+                        if (gameObject != null)
+                            gameObjects.Add(new Vector2(x, y), gameObject);
+
+                        if (rows[y][x] == '0')
+                            spawn = new Vector2(x, y);
                     }
                 }    
             }
             
-            return layout;
+            return new Level(layout, entities, gameObjects, spawn, player);
         }
 
         public static Tile CreateTile(char tileType, Vector2 position)
@@ -164,16 +178,27 @@ namespace AsciiProgram
                     endWindow.SetBorderChar('+');
                     tileToAdd = new TriggerTile(new DisplayObject('*', ConsoleColor.Green, ConsoleColor.Black, position), new ShowWindowTrigger(endWindow, 2));
                     break;
-
-                default://wall
-                    tileToAdd = new Tile(new DisplayObject(' ', ConsoleColor.Gray, ConsoleColor.Black, position));
-                    tileToAdd.m_solid = true;
-                    break;
             }
 
             return tileToAdd;
         }
 
-        public static 
+        public static GameObject CreateGameObject(char objectType, Vector2 position)
+        {
+            GameObject objectToAdd = null;
+            switch (objectType)
+            {
+                case '^':
+                    GameWindow window = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+                    window.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
+                    window.SetTextWrapping(true);
+
+                    objectToAdd = new NoteObject(new DisplayObject(objectType, position), window);
+                    break;
+            }
+
+
+            return objectToAdd;
+        }
     }
 }
