@@ -14,6 +14,8 @@ namespace AsciiProgram
         LevelCamera m_levelCam;
         MovingEntity m_player;
 
+        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
+
         public LevelManager(string firstLevelName, MovingEntity player)
         {
             m_player = player;
@@ -67,9 +69,10 @@ namespace AsciiProgram
             }
         }
 
-        public void ChangeLevel(string newLevel)
+        public void ChangeLevel(object sender, string newLevel)
         {
             m_currentLevel = Program.SetUpLevel(newLevel, m_player);
+            fastWrite.AddToBuffer(0, 0, 6, "ChangeLevel");
         }
     }
 
@@ -232,8 +235,9 @@ namespace AsciiProgram
                     break;
 
                 case '*':
-                    objectToAdd = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
-                    
+                    LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
+                    temp.LevelChange += game.ChangeLevel;//does not work. game is null. may need to be a static func to be event
+                    objectToAdd = temp;
                     break;
             }
 
