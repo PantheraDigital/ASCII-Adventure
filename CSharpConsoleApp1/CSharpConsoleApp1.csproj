@@ -46,10 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="programfiles\Controller.cs" />
-    <Compile Include="programfiles\DisplayObject.cs" />
+    <Compile Include="programfiles\gameObjects\DisplayObject.cs" />
     <Compile Include="programfiles\Entity.cs" />
     <Compile Include="programfiles\Tools\FastWrite.cs" />
-    <Compile Include="programfiles\GameObject.cs" />
+    <Compile Include="programfiles\gameObjects\GameObject.cs" />
     <Compile Include="programfiles\GameWindow.cs" />
     <Compile Include="programfiles\Level.cs" />
     <Compile Include="programfiles\LevelCamera.cs" />

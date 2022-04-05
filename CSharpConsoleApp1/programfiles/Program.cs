@@ -23,6 +23,7 @@ namespace AsciiProgram
             int halfWindowHeight = (int)(Console.WindowHeight / 2);
 
             Console.CursorVisible = false;
+            Console.Title = "Ascii Adventure";
 
 
 
