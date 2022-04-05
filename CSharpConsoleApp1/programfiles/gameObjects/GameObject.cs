@@ -11,11 +11,13 @@ namespace AsciiProgram
     {
         public DisplayObject m_displayObject { get; protected set; }
         public bool m_solid { get; protected set; }
+        public bool m_pickUp { get; protected set; }
 
         public GameObject(DisplayObject display, bool solid)
         {
             m_displayObject = display;
             m_solid = solid;
+            m_pickUp = false;
         }
 
         public virtual void Update() { }

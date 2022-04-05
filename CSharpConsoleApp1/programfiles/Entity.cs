@@ -18,6 +18,11 @@ namespace AsciiProgram
             m_controller = controller;
         }
 
+        public Controller GetController()
+        {
+            return m_controller;
+        }
+
         public abstract void Update();
 
         public virtual Vector2 GetCurrentPosition()

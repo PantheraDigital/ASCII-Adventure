@@ -8,71 +8,38 @@ using System.Diagnostics;
 
 namespace AsciiProgram
 {
-
-    class Program
+    public class LevelManager
     {
-        static void Main(string[] args)
+        Level m_currentLevel;
+        LevelCamera m_levelCam;
+        MovingEntity m_player;
+
+        public LevelManager(string firstLevelName, MovingEntity player)
         {
-            /*
-            Console.Write('\u2592');//unicode
-            
-            */
-            Console.SetWindowSize(80, 40);
-
-            int halfWindowWidth = (int)(Console.WindowWidth / 2);
-            int halfWindowHeight = (int)(Console.WindowHeight / 2);
-
-            Console.CursorVisible = false;
-            Console.Title = "Ascii Adventure";
+            m_player = player;
+            m_currentLevel = Program.SetUpLevel(firstLevelName, player);
 
 
+            int levelCenter = (int)(Console.WindowWidth / 2) - (int)(m_currentLevel.GetMaxDimentions().x / 2);
 
-            FastConsole.FastWrite.InitializeBuffer();
+            m_levelCam = new LevelCamera(new Vector2(3, 0), new Vector2(19, 19), new Vector2(levelCenter, (int)(Console.WindowHeight / 2) - (int)(m_currentLevel.GetMaxDimentions().y / 2)));
+        }
 
-            PlayerController controller = new PlayerController();
-            Stopwatch stopwatch = Stopwatch.StartNew();
+        public void Run()
+        {
             bool quit = false;
-            float timeStep = 3.0f;
-            int timesUpdated = 0;
-
-            DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
-            MovingEntity player = new MovingEntity(playerDisplay, controller);
-
-            List<MovingEntity> players = new List<MovingEntity>();
-            players.Add(player);
-
-            Level level = SetUpLevel(LevelLayouts.mazeLevel1, player);
-
-            int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
-
-            LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
-
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
-            quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
-            quitWindow.SetBorderChar('\\');
-            quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-
-            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-            startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
-            startWindow.SetTextWrapping(true);
-            startWindow.SetBorderChar('*');
-
-            startWindow.Draw(1);
-            Console.ReadKey(true);
-            startWindow.Erase();
-
             while (quit == false)
             {
-                level.Update();
-                
-                LevelCam.CenterCameraOn(player.GetCurrentPosition());
-                LevelCam.UpdateDisplayList(level);
-                LevelCam.Draw(0);
-                
+                m_currentLevel.Update();
 
-                if (controller.HasInput())
+                m_levelCam.CenterCameraOn(m_player.GetCurrentPosition());
+                m_levelCam.UpdateDisplayList(m_currentLevel);
+                m_levelCam.Draw(0);
+
+
+                if (m_player.GetController().HasInput())
                 {
-                    if (controller.GetInput().Key == ConsoleKey.Q)
+                    if (m_player.GetController().GetInput().Key == ConsoleKey.Q)
                         quit = true;
                 }
 
@@ -98,9 +65,80 @@ namespace AsciiProgram
                     Console.Write("Input: " + controller.m_input.KeyChar);
                 }*/
             }
+        }
+
+        public void ChangeLevel(string newLevel)
+        {
+            m_currentLevel = Program.SetUpLevel(newLevel, m_player);
+        }
+    }
+
+    class Program
+    {
+        static LevelManager game;// = new LevelManager("mazeLevel1", player);
+        
+
+        static void Main(string[] args)
+        { 
+            /*
+            Console.Write('\u2592');//unicode
+            
+            */
+            Console.SetWindowSize(80, 40);
+
+            int halfWindowWidth = (int)(Console.WindowWidth / 2);
+            int halfWindowHeight = (int)(Console.WindowHeight / 2);
+
+            Console.CursorVisible = false;
+            Console.Title = "Ascii Adventure";
+
+
+
+            FastConsole.FastWrite.InitializeBuffer();
+
+            PlayerController controller = new PlayerController();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            //bool quit = false;
+            float timeStep = 3.0f;
+            int timesUpdated = 0;
+
+            DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
+            MovingEntity player = new MovingEntity(playerDisplay, controller);
+
+            List<MovingEntity> players = new List<MovingEntity>();
+            players.Add(player);
+
+            //Level level = SetUpLevel(LevelLayouts.mazeLevel1, player);
+
+            //int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
+
+            //LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
+
+            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
+            quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
+            quitWindow.SetBorderChar('\\');
+            quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
+
+            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
+            startWindow.SetTextWrapping(true);
+            startWindow.SetBorderChar('*');
+
+            startWindow.Draw(1);
+            Console.ReadKey(true);
+            startWindow.Erase();
+
+            game = new LevelManager("mazeLevel1", player);
+            game.Run();
+
 
             quitWindow.Draw(1);
             Console.ReadKey(true);
+        }
+
+        public static void LevelChange(Level level, MovingEntity player, string newLevelName)
+        {
+            level = SetUpLevel(newLevelName, player);
         }
 
         public static Level SetUpLevel(string levelLayout, MovingEntity player)
@@ -110,7 +148,7 @@ namespace AsciiProgram
             List<MovingEntity> entities = new List<MovingEntity>();
             Vector2 spawn = new Vector2(0,0);
 
-            string[] rows = levelLayout.Split('\n');
+            string[] rows = GetLevelLayout(levelLayout).Split('\n');
 
             entities.Add(player);
 
@@ -165,6 +203,21 @@ namespace AsciiProgram
             return tileToAdd;
         }
 
+        public static string GetLevelLayout(string layoutName)
+        {
+            switch (layoutName)
+            {
+                case "mazeLevel1":
+                    return LevelLayouts.mazeLevel1;
+
+                case "mazeLevel2":
+                    return LevelLayouts.mazeLevel2;
+
+                default:
+                    return LevelLayouts.mazeLevel1;
+            }
+        }
+
         public static GameObject CreateGameObject(char objectType, Vector2 position)
         {
             GameObject objectToAdd = null;
@@ -176,6 +229,11 @@ namespace AsciiProgram
                     window.SetTextWrapping(true);
 
                     objectToAdd = new NoteObject(new DisplayObject(objectType, position), window);
+                    break;
+
+                case '*':
+                    objectToAdd = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
+                    
                     break;
             }
 

@@ -10,7 +10,7 @@ namespace AsciiProgram
     public class MovingEntity : Entity//make interface? IMove? 
     {
         Vector2 m_movePosition;
-        bool m_moved;
+        //bool m_moved;
         string m_tags;
 
 
@@ -18,7 +18,7 @@ namespace AsciiProgram
             : base(displayObject, controller)
         {
             m_movePosition = m_displayObject.m_displayPosition;
-            m_moved = false;
+            //m_moved = false;
             m_tags = tags;
         }
 
@@ -67,7 +67,7 @@ namespace AsciiProgram
         public void Move()
         {
             m_displayObject.m_displayPosition = m_movePosition;
-            m_moved = true;
+            //m_moved = true;
         }
 
         public string GetTags()
