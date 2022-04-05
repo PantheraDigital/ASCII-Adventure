@@ -154,5 +154,10 @@ namespace AsciiProgram
 
             m_fastWrite.DisplayBuffer();
         }
+
+        public void Clear(int layer)
+        {
+            m_fastWrite.ClearLayer(layer);
+        }
     }
 }
