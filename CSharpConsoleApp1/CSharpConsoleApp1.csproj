@@ -45,23 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="programfiles\Controller.cs" />
-    <Compile Include="programfiles\DisplayObject.cs" />
-    <Compile Include="programfiles\Entity.cs" />
+    <Compile Include="programfiles\Controllers\Controller.cs" />
+    <Compile Include="programfiles\Tools\DisplayObject.cs" />
+    <Compile Include="programfiles\Entities\Entity.cs" />
     <Compile Include="programfiles\gameObjects\LevelChangeObject.cs" />
     <Compile Include="programfiles\gameObjects\NoteObject.cs" />
-    <Compile Include="programfiles\LevelManager.cs" />
+    <Compile Include="programfiles\LevelStuff\LevelManager.cs" />
     <Compile Include="programfiles\Tools\FastWrite.cs" />
     <Compile Include="programfiles\gameObjects\GameObject.cs" />
-    <Compile Include="programfiles\GameWindow.cs" />
-    <Compile Include="programfiles\Level.cs" />
-    <Compile Include="programfiles\LevelCamera.cs" />
-    <Compile Include="programfiles\LevelLayouts.cs" />
-    <Compile Include="programfiles\MovingEntity.cs" />
-    <Compile Include="programfiles\PlayerController.cs" />
+    <Compile Include="programfiles\Tools\GameWindow.cs" />
+    <Compile Include="programfiles\LevelStuff\Level.cs" />
+    <Compile Include="programfiles\LevelStuff\LevelCamera.cs" />
+    <Compile Include="programfiles\LevelStuff\LevelLayouts.cs" />
+    <Compile Include="programfiles\Entities\MovingEntity.cs" />
+    <Compile Include="programfiles\Controllers\PlayerController.cs" />
     <Compile Include="programfiles\Program.cs" />
     <Compile Include="programfiles\Tools\TextBoxFormatter.cs" />
-    <Compile Include="programfiles\Tile.cs" />
+    <Compile Include="programfiles\LevelStuff\Tile.cs" />
     <Compile Include="programfiles\Tools\Vector2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
