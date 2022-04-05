@@ -8,7 +8,6 @@ namespace AsciiProgram
 {
     public class LevelChangeObject : GameObject
     {
-        //LevelManager m_levelManager;
         public event EventHandler<string> LevelChange;
         string m_levelName;
 
@@ -16,7 +15,6 @@ namespace AsciiProgram
             :base(displayObject, false)
         {
             m_levelName = levelName;
-            //m_levelManager = levelManager;
         }
 
         public override void OnCollide(MovingEntity other)
@@ -24,7 +22,6 @@ namespace AsciiProgram
             if(other.GetTags().Contains("player"))
             {
                 LevelChange?.Invoke(this, m_levelName);
-                //m_levelManager.ChangeLevel(m_levelName);
             }
         }
     }

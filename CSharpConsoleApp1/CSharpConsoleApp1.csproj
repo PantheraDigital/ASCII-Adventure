@@ -50,6 +50,7 @@
     <Compile Include="programfiles\Entity.cs" />
     <Compile Include="programfiles\gameObjects\LevelChangeObject.cs" />
     <Compile Include="programfiles\gameObjects\NoteObject.cs" />
+    <Compile Include="programfiles\LevelManager.cs" />
     <Compile Include="programfiles\Tools\FastWrite.cs" />
     <Compile Include="programfiles\gameObjects\GameObject.cs" />
     <Compile Include="programfiles\GameWindow.cs" />

@@ -8,74 +8,6 @@ using System.Diagnostics;
 
 namespace AsciiProgram
 {
-    public class LevelManager
-    {
-        Level m_currentLevel;
-        LevelCamera m_levelCam;
-        MovingEntity m_player;
-
-        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
-
-        public LevelManager(string firstLevelName, MovingEntity player)
-        {
-            m_player = player;
-            m_currentLevel = Program.SetUpLevel(firstLevelName, player);
-
-
-            int levelCenter = (int)(Console.WindowWidth / 2) - (int)(m_currentLevel.GetMaxDimentions().x / 2);
-
-            m_levelCam = new LevelCamera(new Vector2(3, 0), new Vector2(19, 19), new Vector2(levelCenter, (int)(Console.WindowHeight / 2) - (int)(m_currentLevel.GetMaxDimentions().y / 2)));
-        }
-
-        public void Run()
-        {
-            bool quit = false;
-            while (quit == false)
-            {
-                m_currentLevel.Update();
-
-                m_levelCam.CenterCameraOn(m_player.GetCurrentPosition());
-                m_levelCam.UpdateDisplayList(m_currentLevel);
-                m_levelCam.Draw(0);
-
-
-                if (m_player.GetController().HasInput())
-                {
-                    if (m_player.GetController().GetInput().Key == ConsoleKey.Q)
-                        quit = true;
-                }
-
-                /*
-                if (stopwatch.IsRunning && stopwatch.Elapsed.TotalSeconds >= timeStep)
-                {
-                    //Console.SetCursorPosition(6, 6);
-                    //Console.Write("No Input");
-
-                    ++timesUpdated;
-                    Console.SetCursorPosition(6, 5);
-                    Console.Write("Update num: " + timesUpdated);
-                    stopwatch.Restart();
-                }
-
-                if (controller.HasInput())
-                {
-                    if (controller.m_input.Key == ConsoleKey.Q)
-                        quit = true;
-
-                    //stopwatch.Restart();
-                    Console.SetCursorPosition(6, 6);
-                    Console.Write("Input: " + controller.m_input.KeyChar);
-                }*/
-            }
-        }
-
-        public void ChangeLevel(object sender, string newLevel)
-        {
-            m_currentLevel = Program.SetUpLevel(newLevel, m_player);
-            fastWrite.AddToBuffer(0, 0, 6, "ChangeLevel");
-        }
-    }
-
     class Program
     {
         static LevelManager game;// = new LevelManager("mazeLevel1", player);
@@ -106,16 +38,10 @@ namespace AsciiProgram
             int timesUpdated = 0;
 
             DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
-            MovingEntity player = new MovingEntity(playerDisplay, controller);
-
+            MovingEntity player = new MovingEntity(playerDisplay, controller, "player");
+            
             List<MovingEntity> players = new List<MovingEntity>();
             players.Add(player);
-
-            //Level level = SetUpLevel(LevelLayouts.mazeLevel1, player);
-
-            //int levelCenter = halfWindowWidth - (int)(level.GetMaxDimentions().x / 2);
-
-            //LevelCamera LevelCam = new LevelCamera(new Vector2(3,0), new Vector2(19,19), new Vector2(levelCenter, halfWindowHeight - (int)(level.GetMaxDimentions().y / 2)));
 
             GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
             quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
@@ -131,7 +57,9 @@ namespace AsciiProgram
             Console.ReadKey(true);
             startWindow.Erase();
 
-            game = new LevelManager("mazeLevel1", player);
+            
+            game = new LevelManager();
+            game.Initialize("mazeLevel1", player);
             game.Run();
 
 
@@ -139,9 +67,10 @@ namespace AsciiProgram
             Console.ReadKey(true);
         }
 
-        public static void LevelChange(Level level, MovingEntity player, string newLevelName)
+        public static void EventTest(object sender, string args)
         {
-            level = SetUpLevel(newLevelName, player);
+            Console.SetCursorPosition(0, 0);
+            Console.CursorVisible = true;
         }
 
         public static Level SetUpLevel(string levelLayout, MovingEntity player)
@@ -236,7 +165,7 @@ namespace AsciiProgram
 
                 case '*':
                     LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
-                    temp.LevelChange += game.ChangeLevel;//does not work. game is null. may need to be a static func to be event
+                    temp.LevelChange += game.ChangeLevel;
                     objectToAdd = temp;
                     break;
             }
