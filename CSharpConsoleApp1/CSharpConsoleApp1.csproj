@@ -46,8 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="programfiles\Controller.cs" />
-    <Compile Include="programfiles\gameObjects\DisplayObject.cs" />
+    <Compile Include="programfiles\DisplayObject.cs" />
     <Compile Include="programfiles\Entity.cs" />
+    <Compile Include="programfiles\gameObjects\NoteObject.cs" />
     <Compile Include="programfiles\Tools\FastWrite.cs" />
     <Compile Include="programfiles\gameObjects\GameObject.cs" />
     <Compile Include="programfiles\GameWindow.cs" />
