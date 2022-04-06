@@ -156,11 +156,11 @@ namespace AsciiProgram
             switch (objectType)
             {
                 case '^':
-                    GameWindow window = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+                    /*GameWindow window = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
                     window.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
-                    window.SetTextWrapping(true);
+                    window.SetTextWrapping(true)*/
 
-                    objectToAdd = new NoteObject(new DisplayObject(objectType, position), window);
+                    objectToAdd = new NoteObject(new DisplayObject(objectType, position), NoteWindowMaker.CreateNoteWindow(position));
                     break;
 
                 case '*':
