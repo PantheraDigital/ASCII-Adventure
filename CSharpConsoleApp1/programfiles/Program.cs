@@ -73,14 +73,14 @@ namespace AsciiProgram
             Console.CursorVisible = true;
         }
 
-        public static Level SetUpLevel(string levelLayout, MovingEntity player)
+        public static Level SetUpLevel(string levelName, MovingEntity player)
         {
             List<List<Tile>> layout = new List<List<Tile>>();
             Dictionary<Vector2, GameObject> gameObjects = new Dictionary<Vector2, GameObject>();
             List<MovingEntity> entities = new List<MovingEntity>();
             Vector2 spawn = new Vector2(0,0);
 
-            string[] rows = GetLevelLayout(levelLayout).Split('\n');
+            string[] rows = GetLevelLayout(levelName).Split('\n');
 
             entities.Add(player);
 
@@ -99,7 +99,7 @@ namespace AsciiProgram
                         else
                             layout[y].Add(CreateTile('.', new Vector2(x, y)));
 
-                        GameObject gameObject = CreateGameObject(rows[y][x], new Vector2(x, y));
+                        GameObject gameObject = CreateGameObject(levelName, rows[y][x], new Vector2(x, y));
                         if (gameObject != null)
                             gameObjects.Add(new Vector2(x, y), gameObject);
 
@@ -150,17 +150,15 @@ namespace AsciiProgram
             }
         }
 
-        public static GameObject CreateGameObject(char objectType, Vector2 position)
+        public static GameObject CreateGameObject(string levelName, char objectType, Vector2 position)
         {
             GameObject objectToAdd = null;
             switch (objectType)
             {
                 case '^':
-                    /*GameWindow window = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-                    window.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
-                    window.SetTextWrapping(true)*/
-
-                    objectToAdd = new NoteObject(new DisplayObject(objectType, position), NoteWindowMaker.CreateNoteWindow(position));
+                    GameWindow gameWindow = NoteWindowMaker.CreateNoteWindow(levelName, position);
+                    if (gameWindow != null)
+                        objectToAdd = new NoteObject(new DisplayObject(objectType, position), gameWindow);
                     break;
 
                 case '*':

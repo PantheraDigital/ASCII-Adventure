@@ -42,25 +42,63 @@ namespace AsciiProgram
             }
         }
 
-
-        static int m_currentNote = 0;
-        static NoteWindowData[] m_notes = {new NoteWindowData(new Vector2(1,1), new Vector2(9,5), "Hello there!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Cyan),
+        struct LevelNotes
+        {
+            public static NoteWindowData[] mazeLevel1Notes = {new NoteWindowData(new Vector2(1,1), new Vector2(9,5), "Hello there!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Cyan),
             new NoteWindowData(new Vector2(1,1), new Vector2(9, 5), "good bye", ConsoleColor.Red) };
 
 
+            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData(new Vector2(1, 1), new Vector2(9, 5), "Hello\nthere!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
 
-        static int GetCurrentNote()
+        }
+
+
+        static int m_currentNote = 0;
+        static string m_currentLevelName = "null";
+        static NoteWindowData[] m_currentLevelNotes;    
+        
+
+        static void SetCurrentLevel(string levelName)
         {
-            if (m_currentNote > m_notes.Length)
-                m_currentNote = 0;
+            if(!levelName.Equals(m_currentLevelName))
+            {
+                m_currentLevelName = levelName;
+                switch (levelName)
+                {
+                    case "mazeLevel1":
+                        m_currentLevelNotes = LevelNotes.mazeLevel1Notes;
+                        break;
+
+                    case "mazeLevel2":
+                        m_currentLevelNotes = LevelNotes.mazeLevel2Notes;
+                        break;
+
+                    default:
+                        m_currentLevelNotes = null;
+                        break;
+                }
+            }
+        }
+
+        static int GetCurrentNote(string levelName)
+        {
+            SetCurrentLevel(levelName);
+            if (m_currentLevelNotes == null || m_currentNote >= m_currentLevelNotes.Length)
+                m_currentNote = -1;
 
             ++m_currentNote;
             return m_currentNote - 1;
         }
 
-        static public GameWindow CreateNoteWindow(Vector2 pos)
+        static public GameWindow CreateNoteWindow(string levelName, Vector2 pos)
         {
-            NoteWindowData note = m_notes[GetCurrentNote()];
+            int index = GetCurrentNote(levelName);
+
+            if (index == -1)
+                return null;
+
+            NoteWindowData note = m_currentLevelNotes[index];
+            
             GameWindow gameWindow = new GameWindow(note.screenPosition, note.windowSize, note.backgroundChar, note.windowForeground, note.windowBackground);
             gameWindow.SetMessage(note.message, note.messageForeground, note.messageBackground);
             if (note.borderChar != '\u0000')
