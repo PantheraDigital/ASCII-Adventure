@@ -63,6 +63,8 @@ namespace AsciiProgram
             if(!levelName.Equals(m_currentLevelName))
             {
                 m_currentLevelName = levelName;
+                m_currentNote = 0;
+
                 switch (levelName)
                 {
                     case "mazeLevel1":
@@ -90,7 +92,7 @@ namespace AsciiProgram
             return m_currentNote - 1;
         }
 
-        static public GameWindow CreateNoteWindow(string levelName, Vector2 pos)
+        static public GameWindow CreateNoteWindow(string levelName)
         {
             int index = GetCurrentNote(levelName);
 

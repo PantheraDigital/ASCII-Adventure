@@ -156,15 +156,19 @@ namespace AsciiProgram
             switch (objectType)
             {
                 case '^':
-                    GameWindow gameWindow = NoteWindowMaker.CreateNoteWindow(levelName, position);
+                    GameWindow gameWindow = NoteWindowMaker.CreateNoteWindow(levelName);
                     if (gameWindow != null)
                         objectToAdd = new NoteObject(new DisplayObject(objectType, position), gameWindow);
                     break;
 
                 case '*':
-                    LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
-                    temp.LevelChange += game.ChangeLevel;
-                    objectToAdd = temp;
+                    string nextLevel = LevelChangeTracker.GetNextLevelChange(levelName);
+                    if(nextLevel != null)
+                    {
+                        LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), nextLevel);
+                        temp.LevelChange += game.ChangeLevel;
+                        objectToAdd = temp;
+                    }
                     break;
             }
 

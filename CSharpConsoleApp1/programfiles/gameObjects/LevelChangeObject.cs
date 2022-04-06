@@ -11,7 +11,7 @@ namespace AsciiProgram
         public event EventHandler<string> LevelChange;
         string m_levelName;
 
-        public LevelChangeObject(DisplayObject displayObject, LevelManager levelManager, string levelName)
+        public LevelChangeObject(DisplayObject displayObject, string levelName)
             :base(displayObject, false)
         {
             m_levelName = levelName;
