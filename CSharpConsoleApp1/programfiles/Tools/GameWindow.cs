@@ -33,12 +33,14 @@ namespace AsciiProgram
         bool m_active;
         bool m_updated;
         int m_layer;
+        string m_windowName;
         FastWrite m_fastWrite;
 
 
 
-        public GameWindow(Vector2 screenPosition, Vector2 windowSize, char backgroundChar = ' ', ConsoleColor windowForegroundColor = ConsoleColor.White, ConsoleColor windowBackgroundColor = ConsoleColor.Black)
+        public GameWindow(string windowName, Vector2 screenPosition, Vector2 windowSize, char backgroundChar = ' ', ConsoleColor windowForegroundColor = ConsoleColor.White, ConsoleColor windowBackgroundColor = ConsoleColor.Black)
         {
+            m_windowName = windowName;
             m_screenPosition = screenPosition;
             m_windowSize = windowSize;
             m_backgroundChar = backgroundChar;
@@ -86,7 +88,7 @@ namespace AsciiProgram
         public void Erase()
         {
             m_active = false;
-            m_fastWrite.ClearLayer(m_layer);
+            m_fastWrite.ClearLayer(m_windowName);
         }
 
         public bool IsActive()
@@ -176,22 +178,22 @@ namespace AsciiProgram
             m_updated = true;
         }
 
-        public void Draw(int layer)
+        public void Draw()
         {
             if (!m_updated && m_active)
                 return;
 
 
             m_active = true;
-            m_layer = layer;
+            //m_layer = layer;
 
-            DrawBackground(layer);
-            DrawText(layer);
+            DrawBackground();
+            DrawText();
             
             m_fastWrite.DisplayBuffer();
         }
 
-        void DrawBackground(int layer)
+        void DrawBackground()
         {
             //fill window with background, include border
             for (int y = 0; y < m_windowSize.y; ++y)
@@ -203,7 +205,7 @@ namespace AsciiProgram
                         //fill first and last row with border
                         for (int x = 0; x < m_windowSize.x; ++x)
                         {
-                            m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                            m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
                         }
                     }
                     else
@@ -212,9 +214,9 @@ namespace AsciiProgram
                         for (int x = 0; x < m_windowSize.x; ++x)
                         {
                             if (x == 0 || x == m_windowSize.x - 1)
-                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
                             else
-                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
                         }
                     }
 
@@ -223,13 +225,13 @@ namespace AsciiProgram
                 {
                     for (int x = 0; x < m_windowSize.x; ++x)
                     {
-                        m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                        m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
                     }
                 }
             }
         }
 
-        void DrawText(int layer)
+        void DrawText()
         {
             Vector2 pos = m_screenPosition;
 
@@ -252,7 +254,7 @@ namespace AsciiProgram
                 m_fastWrite.SetCursorPosition(pos);
 
                 if (formattedMessage[i].Length > 0)
-                    m_fastWrite.AddToBuffer(layer, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+                    m_fastWrite.AddToBuffer(m_windowName, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
 
                 pos.y += 1;
             }

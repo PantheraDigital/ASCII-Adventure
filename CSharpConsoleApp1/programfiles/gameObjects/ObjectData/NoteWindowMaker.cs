@@ -10,6 +10,7 @@ namespace AsciiProgram
     {
         struct NoteWindowData
         {
+            public string noteName;
             public Vector2 screenPosition;
             public Vector2 windowSize;
             public string message;
@@ -23,11 +24,12 @@ namespace AsciiProgram
             public ConsoleColor borderBackground;
 
 
-            public NoteWindowData(Vector2 screenPosition, Vector2 windowSize, string message,
+            public NoteWindowData(string noteName, Vector2 screenPosition, Vector2 windowSize, string message,
                 ConsoleColor messageForegroundColor = ConsoleColor.White, ConsoleColor messageBackgroundColor = ConsoleColor.Black,
                 char backgroundChar = ' ', ConsoleColor windowForegroundColor = ConsoleColor.White, ConsoleColor windowBackgroundColor = ConsoleColor.Black,
                 char borderChar = '\u0000', ConsoleColor borderForeground = ConsoleColor.White, ConsoleColor borderBackground = ConsoleColor.Black)
             {
+                this.noteName = noteName;
                 this.screenPosition = screenPosition;
                 this.windowSize = windowSize;
                 this.message = message;
@@ -44,14 +46,17 @@ namespace AsciiProgram
 
         struct LevelNotes
         {
-            public static NoteWindowData[] mazeLevel1Notes = {new NoteWindowData(new Vector2(1,1), new Vector2(9,5), "Hello there!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Cyan),
-            new NoteWindowData(new Vector2(1,1), new Vector2(9, 5), "good bye", ConsoleColor.Red) };
+            public static NoteWindowData[] mazeLevel1Notes = { new NoteWindowData("helloNote", new Vector2(1,1), new Vector2(9,5), "Hello there!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Cyan),
+                new NoteWindowData("byeMessage", new Vector2(1,1), new Vector2(9, 5), "good bye", ConsoleColor.Red) };
 
 
-            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData(new Vector2(1, 1), new Vector2(9, 5), "Hello\nthere!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
+            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData("hiNote", new Vector2(1, 1), new Vector2(9, 5), "Hello\nthere!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
 
         }
 
+        //  /////////////////////////
+        //  make non static by adding the level set up funcs in program to a class for level creation then add this as an object inside allong with levelChangeTracker
+        //  /////////////////////////
 
         static int m_currentNote = 0;
         static string m_currentLevelName = "null";
@@ -101,7 +106,7 @@ namespace AsciiProgram
 
             NoteWindowData note = m_currentLevelNotes[index];
             
-            GameWindow gameWindow = new GameWindow(note.screenPosition, note.windowSize, note.backgroundChar, note.windowForeground, note.windowBackground);
+            GameWindow gameWindow = new GameWindow(note., note.screenPosition, note.windowSize, note.backgroundChar, note.windowForeground, note.windowBackground);
             gameWindow.SetMessage(note.message, note.messageForeground, note.messageBackground);
             if (note.borderChar != '\u0000')
             {

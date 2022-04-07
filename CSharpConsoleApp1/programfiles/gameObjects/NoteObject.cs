@@ -21,7 +21,7 @@ namespace AsciiProgram
         {
             //m_active = true;
 
-            m_window.Draw(4);
+            m_window.Draw();
         }
 
         public override void EndCollide()
@@ -33,7 +33,7 @@ namespace AsciiProgram
 
         public override void OnDraw()
         {
-            m_window.Draw(4);
+            m_window.Draw();
             Console.ReadKey(true);
             m_window.Erase();
         }

@@ -147,7 +147,7 @@ namespace AsciiProgram
                     temp.x = m_displayList[key].display.m_displayPosition.x + temp.x;
                     temp.y = m_displayList[key].display.m_displayPosition.y + temp.y;
 
-                    m_fastWrite.AddToBuffer(temp.x, temp.y, layer, m_displayList[key].display.m_spriteChar, m_displayList[key].display.m_foregroudColor, m_displayList[key].display.m_backgroundColor);
+                    m_fastWrite.AddToBuffer(temp.x, temp.y, "GameLevel", m_displayList[key].display.m_spriteChar, m_displayList[key].display.m_foregroudColor, m_displayList[key].display.m_backgroundColor);
                     m_displayList[key] = new DisplayData(m_displayList[key].display, false);
                 }
             }
@@ -155,9 +155,9 @@ namespace AsciiProgram
             m_fastWrite.DisplayBuffer();
         }
 
-        public void Clear(int layer)
+        public void Clear()
         {
-            m_fastWrite.ClearLayer(layer);
+            m_fastWrite.ClearLayer("GameLevel");
         }
     }
 }

@@ -43,17 +43,17 @@ namespace AsciiProgram
             List<MovingEntity> players = new List<MovingEntity>();
             players.Add(player);
 
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
+            GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
             quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
             quitWindow.SetBorderChar('\\');
             quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
 
-            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
             startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 
-            startWindow.Draw(1);
+            startWindow.Draw();
             Console.ReadKey(true);
             startWindow.Erase();
 
@@ -63,7 +63,7 @@ namespace AsciiProgram
             game.Run();
 
 
-            quitWindow.Draw(1);
+            quitWindow.Draw();
             Console.ReadKey(true);
         }
 
