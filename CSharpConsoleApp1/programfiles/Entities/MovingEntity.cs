@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsciiProgram
 {
-    public class Component
+    public abstract class Component
     {
         string m_type;
 
@@ -19,16 +19,40 @@ namespace AsciiProgram
         {
             return m_type;
         }
+
+        public virtual void Draw() { }
     }
 
     public class Inventory : Component
     {
+        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         List<GameObject> m_gameObjects;
+        GameWindow m_display;
 
-        public Inventory()
+        public Inventory(GameWindow gameWindow)
             :base("Inventory")
         {
             m_gameObjects = new List<GameObject>();
+            m_display = gameWindow;
+            m_display.SetMessage("");
+        }
+
+        public override void Draw()
+        {
+            if (m_display != null)
+            {
+                m_display.Draw();
+            }
+
+            fastWrite.SetCursorPosition(m_display.GetScreenPosition());
+            if(m_gameObjects.Count == 0)
+                fastWrite.AddToBuffer(this.ToString(), "empty", ConsoleColor.Cyan);
+            else
+            {
+                fastWrite.ClearLayer(this.ToString());
+                foreach (GameObject obj in m_gameObjects)
+                    fastWrite.AddToBuffer(this.ToString(), obj.m_displayObject.m_spriteChar.ToString(), ConsoleColor.Cyan);
+            }
         }
 
         public bool Add(GameObject gameObject)
@@ -36,6 +60,7 @@ namespace AsciiProgram
             if (gameObject != null)
             {
                 m_gameObjects.Add(gameObject);
+                m_display.AddToMessage(gameObject.m_displayObject.m_spriteChar.ToString());
                 return true;
             }
 
@@ -52,6 +77,7 @@ namespace AsciiProgram
             if (gameObject != null && m_gameObjects.Contains(gameObject))
             {
                 m_gameObjects.Remove(gameObject);
+                m_display.RemoveFromMessage(gameObject.m_displayObject.m_spriteChar.ToString());
                 return true;
             }
             else
@@ -64,6 +90,7 @@ namespace AsciiProgram
         bool HasComponent(string type);
         T GetComponent<T>(string type);//return component in its type
         bool AddComponent(Component component);
+        void DrawComponents();
     }
 
     public class ComplexEntity : MovingEntity, IComponentManager
@@ -78,7 +105,10 @@ namespace AsciiProgram
 
         public bool HasComponent(string type)
         {
-            return false;
+            if (m_components.ContainsKey(type))
+                return true;
+            else
+                return false;
         }
 
         public T GetComponent<T>(string type)
@@ -97,6 +127,13 @@ namespace AsciiProgram
             {
                 m_components.Add(component.GetComponentType(), component);
                 return true;
+            }
+        }
+        public void DrawComponents()
+        {
+            foreach(string key in m_components.Keys)
+            {
+                m_components[key].Draw();
             }
         }
     }

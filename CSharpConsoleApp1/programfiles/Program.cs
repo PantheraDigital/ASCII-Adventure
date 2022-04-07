@@ -38,10 +38,16 @@ namespace AsciiProgram
             int timesUpdated = 0;
 
             DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
-            MovingEntity player = new MovingEntity(playerDisplay, controller, "player");
+            ComplexEntity player = new ComplexEntity(playerDisplay, controller, "player");
+
+
+            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 11, Console.WindowHeight - 7), new Vector2(10, 6), '-', ConsoleColor.Gray);
+            pInv.SetBorderChar('\\');
+            pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
+            player.AddComponent(new Inventory(pInv));
             
-            List<MovingEntity> players = new List<MovingEntity>();
-            players.Add(player);
+            //List<MovingEntity> players = new List<MovingEntity>();
+            //players.Add(player);
 
             GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
             quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");

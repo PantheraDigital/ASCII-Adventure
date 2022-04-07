@@ -39,14 +39,6 @@ namespace AsciiProgram
 
         public void Update()
         {
-            for (int y = 0; y < m_tiles.Count; ++y)
-            {
-                for (int x = 0; x < m_tiles[y].Count; ++x)
-                {
-                    m_tiles[y][x].Update();
-                }
-            }
-
             foreach (Vector2 key in m_gameObjects.Keys)
             {
                 m_gameObjects[key].Update();

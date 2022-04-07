@@ -32,7 +32,6 @@ namespace AsciiProgram
 
         bool m_active;
         bool m_updated;
-        int m_layer;
         string m_windowName;
         FastWrite m_fastWrite;
 
@@ -59,8 +58,6 @@ namespace AsciiProgram
             m_textWrapping = false;
             m_useBorder = false;
             m_active = true;
-
-            m_layer = 0;
 
             m_fastWrite = FastWrite.GetInstance();
             m_messageFormatter = new TextBoxFormatter();
@@ -136,6 +133,25 @@ namespace AsciiProgram
             UpdateTextBounds();
         }
 
+        public void AddToMessage(string text)
+        {
+            if (text != null)
+            {
+                m_message = m_message + text;
+                m_updated = true;
+                UpdateTextBounds();
+            }
+        }
+        public void RemoveFromMessage(string text)
+        {
+            if (text != null && m_message.Contains(text))
+            {
+                m_message.Remove(m_message.IndexOf(text), text.Length);
+                m_updated = true;
+                UpdateTextBounds();
+            }
+        }
+
         public void SetBorderChar(char borderChar)
         {
             m_borderChar = borderChar;
@@ -185,7 +201,6 @@ namespace AsciiProgram
 
 
             m_active = true;
-            //m_layer = layer;
 
             DrawBackground();
             DrawText();

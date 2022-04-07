@@ -10,7 +10,7 @@ namespace AsciiProgram
     {
         Level m_currentLevel;
         LevelCamera m_levelCam;
-        MovingEntity m_player;
+        ComplexEntity m_player;
 
 
         public LevelManager()
@@ -18,7 +18,7 @@ namespace AsciiProgram
 
         }
 
-        public void Initialize(string levelName, MovingEntity player)
+        public void Initialize(string levelName, ComplexEntity player)
         {
             m_player = player;
             m_currentLevel = Program.SetUpLevel(levelName, player);
@@ -37,6 +37,7 @@ namespace AsciiProgram
                 m_levelCam.CenterCameraOn(m_player.GetCurrentPosition());
                 m_levelCam.UpdateDisplayList(m_currentLevel);
                 m_levelCam.Draw(0);
+                m_player.DrawComponents();
 
 
                 if (m_player.GetController().HasInput())
