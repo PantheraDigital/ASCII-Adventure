@@ -74,7 +74,7 @@ namespace FastConsole
         static FastWrite instance;
 
         //name of owners. Layer is index
-        static List<string> m_layerOwners;
+        static List<string> layerOwners;
 
         static SafeFileHandle handle;
         static List<List<CharSetInfo>> bufList;
@@ -87,7 +87,7 @@ namespace FastConsole
         private FastWrite()
         {
             InitializeBuffer();
-            m_layerOwners = new List<string>();
+            layerOwners = new List<string>();
         }
 
         static public FastWrite GetInstance()
@@ -160,12 +160,12 @@ namespace FastConsole
 
         int GetLayer(string objectName)
         {
-            if (m_layerOwners.Contains(objectName))
-                return m_layerOwners.IndexOf(objectName);
+            if (layerOwners.Contains(objectName))
+                return layerOwners.IndexOf(objectName);
             else
             {
-                m_layerOwners.Add(objectName);
-                return m_layerOwners.Count - 1;
+                layerOwners.Add(objectName);
+                return layerOwners.Count - 1;
             }
         }
 
@@ -307,10 +307,10 @@ namespace FastConsole
 
         void RemoveLayer(string objectName)
         {
-            int index = m_layerOwners.IndexOf(objectName);
+            int index = layerOwners.IndexOf(objectName);
             bufList.Remove(bufList[index]);
 
-            m_layerOwners.Remove(objectName);
+            layerOwners.Remove(objectName);
         }
     }
     

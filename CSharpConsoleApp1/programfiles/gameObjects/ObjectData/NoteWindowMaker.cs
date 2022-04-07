@@ -106,7 +106,7 @@ namespace AsciiProgram
 
             NoteWindowData note = m_currentLevelNotes[index];
             
-            GameWindow gameWindow = new GameWindow(note., note.screenPosition, note.windowSize, note.backgroundChar, note.windowForeground, note.windowBackground);
+            GameWindow gameWindow = new GameWindow(note.noteName, note.screenPosition, note.windowSize, note.backgroundChar, note.windowForeground, note.windowBackground);
             gameWindow.SetMessage(note.message, note.messageForeground, note.messageBackground);
             if (note.borderChar != '\u0000')
             {
