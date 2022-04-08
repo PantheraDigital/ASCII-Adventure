@@ -30,6 +30,7 @@ namespace AsciiProgram
 
 
             FastConsole.FastWrite.InitializeBuffer();
+            FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
 
             PlayerController controller = new PlayerController();
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -44,32 +45,38 @@ namespace AsciiProgram
             GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 11, Console.WindowHeight - 7), new Vector2(10, 6), '-', ConsoleColor.Gray);
             pInv.SetBorderChar('\\');
             pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
+            //pInv.SetTextWrapping(true);
             player.AddComponent(new Inventory(pInv));
             
             //List<MovingEntity> players = new List<MovingEntity>();
             //players.Add(player);
 
+            
             GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
             quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
             quitWindow.SetBorderChar('\\');
             quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-
+            
             GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
-            startWindow.SetTextWrapping(true);
+            //startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 
             startWindow.Draw();
+            fastWrite.DisplayBuffer();
             Console.ReadKey(true);
             startWindow.Erase();
 
-            
+            fastWrite.DisplayBuffer();
+
+
             game = new LevelManager();
             game.Initialize("mazeLevel1", player);
             game.Run();
 
 
             quitWindow.Draw();
+            fastWrite.DisplayBuffer();
             Console.ReadKey(true);
         }
 

@@ -18,6 +18,7 @@ namespace AsciiProgram
 
         public List<string> FormatText(string text, Vector2 bounds, bool textWrapping)
         {
+            /*
             string[] words = text.Split(' ');
 
             if (m_text.Count == 0)
@@ -140,12 +141,109 @@ namespace AsciiProgram
 
             m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
 
+            return m_text;*/
+
+            Format(text, bounds, textWrapping);
             return m_text;
+
         }
 
         public List<string> GetFormattedText()
         {
             return m_text;
+        }
+
+        void Format(string text, Vector2 bounds, bool textWrapping)
+        {
+            if (m_text.Count == 0)
+                m_text.Add("");
+
+            int lineIndex = m_text.Count - 1;
+
+            if (lineIndex < 0)
+                lineIndex = 0;
+
+            List<string> formattedString = new List<string>();
+
+            FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
+
+            if(textWrapping == false)
+            {
+                string[] lines = text.Split('\n');
+
+                foreach(string line in lines)
+                {
+                    if(line.Length > bounds.x)
+                    {
+                        string[] words = line.Split(' ');
+                        string lineToAdd = "";
+
+                        foreach(string word in words)
+                        {
+                            if ((lineToAdd + word + " ").Length > bounds.x)
+                            {
+                                formattedString.Add(lineToAdd.Trim(' '));
+                                lineToAdd = word;
+                            }
+                            else if(word.Length > bounds.x)
+                            {
+                                formattedString.Add(lineToAdd.Trim(' '));
+                                formattedString.Add(word.Substring(0, bounds.x));
+                                lineToAdd = "";
+                            }
+                            else
+                                lineToAdd = lineToAdd + word + " ";
+                        }
+                        if(lineToAdd.Length > 0)
+                        {
+                            if (lineToAdd.Length + formattedString[formattedString.Count - 1].Length + 1 > bounds.x)
+                                formattedString.Add(lineToAdd);
+                            else
+                                formattedString[formattedString.Count - 1] += lineToAdd;
+                        }
+
+                    }
+                    else
+                    {
+                        formattedString.Add(line);
+                    }
+                        
+                }
+            }
+            else
+            {
+                do
+                {
+                    int offset = 0;
+                    if (text.Length > bounds.x && text[bounds.x] != ' ')
+                    {
+                        while (offset < bounds.x || text[bounds.x - offset] != ' ')
+                            ++offset;
+                    }
+
+                    formattedString.Add(text.Substring(0, bounds.x - offset));
+                    text.Remove(0, bounds.x - offset);
+                } while (text.Length > bounds.x);
+
+                if (text.Length > 0)
+                    formattedString.Add(text);
+
+                for(int i = 0; i < formattedString.Count; ++i)
+                {
+                    if(formattedString[i].Contains('\n'))
+                    {
+                        string[] cutLines = formattedString[i].Split('\n');
+                        for(int x = cutLines.Length - 1; x >= 0 ; --x)
+                        {
+                            formattedString.Insert(i, cutLines[x]);
+                        }
+                    }
+                    
+                }
+
+            }
+
+            m_text = formattedString;
         }
 
     }

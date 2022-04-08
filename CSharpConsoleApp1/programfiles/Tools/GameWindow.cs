@@ -137,7 +137,7 @@ namespace AsciiProgram
         {
             if (text != null)
             {
-                m_message = m_message + text;
+                m_message += text;
                 m_updated = true;
                 UpdateTextBounds();
             }
@@ -204,8 +204,6 @@ namespace AsciiProgram
 
             DrawBackground();
             DrawText();
-            
-            m_fastWrite.DisplayBuffer();
         }
 
         void DrawBackground()
@@ -263,6 +261,7 @@ namespace AsciiProgram
                 timesToLoop = m_textBounds.y;
             else
                 timesToLoop = formattedMessage.Count;
+
 
             for (int i = 0; i < timesToLoop; ++i)
             {

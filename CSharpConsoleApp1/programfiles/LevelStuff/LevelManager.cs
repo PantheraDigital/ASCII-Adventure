@@ -8,6 +8,7 @@ namespace AsciiProgram
 {
     public class LevelManager
     {
+        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         Level m_currentLevel;
         LevelCamera m_levelCam;
         ComplexEntity m_player;
@@ -39,6 +40,7 @@ namespace AsciiProgram
                 m_levelCam.Draw(0);
                 m_player.DrawComponents();
 
+                fastWrite.DisplayBuffer();
 
                 if (m_player.GetController().HasInput())
                 {

@@ -152,7 +152,7 @@ namespace AsciiProgram
                 }
             }
 
-            m_fastWrite.DisplayBuffer();
+            //m_fastWrite.DisplayBuffer();
         }
 
         public void Clear()
