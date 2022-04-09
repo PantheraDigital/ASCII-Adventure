@@ -45,7 +45,6 @@ namespace AsciiProgram
             GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 11, Console.WindowHeight - 7), new Vector2(10, 6), '-', ConsoleColor.Gray);
             pInv.SetBorderChar('\\');
             pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-            //pInv.SetTextWrapping(true);
             player.AddComponent(new Inventory(pInv));
             
             //List<MovingEntity> players = new List<MovingEntity>();
@@ -58,7 +57,7 @@ namespace AsciiProgram
             quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
             
             GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-            startWindow.SetMessage("\n\n-----------------------Press any key to play----------", ConsoleColor.Cyan, ConsoleColor.Black);
+            startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
             //startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 

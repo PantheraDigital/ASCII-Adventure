@@ -16,7 +16,7 @@ namespace AsciiProgram
             m_text = new List<string>();
         }
 
-        public List<string> FormatText(string text, Vector2 bounds, bool textWrap)
+        public List<string> FormatText(string text, Vector2 bounds)
         {
             List<string> formattedString = new List<string>();
             int index = 0;

@@ -113,8 +113,6 @@ namespace AsciiProgram
                 gameWindow.SetBorderChar(note.borderChar);
                 gameWindow.SetBorderColor(note.borderForeground, note.borderBackground);
             }
-
-            gameWindow.SetTextWrapping(true);
             return gameWindow;
         }
     }

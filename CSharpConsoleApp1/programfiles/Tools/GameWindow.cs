@@ -19,7 +19,6 @@ namespace AsciiProgram
         ConsoleColor m_windowBackgroundColor;
 
         TextBoxFormatter m_messageFormatter;
-        bool m_textWrapping;
         string m_message;
         ConsoleColor m_messageForegroundColor;
         ConsoleColor m_messageBackgroundColor;
@@ -55,7 +54,6 @@ namespace AsciiProgram
 
             m_message = "";
 
-            m_textWrapping = false;
             m_useBorder = false;
             m_active = true;
 
@@ -158,12 +156,6 @@ namespace AsciiProgram
             m_updated = true;
             m_useBorder = true;
             UpdateTextBounds();
-        }
-
-        public void SetTextWrapping(bool textWrapping)
-        {
-            m_textWrapping = textWrapping;
-            m_updated = true;
         }
 
         public void SetUseBorder(bool useBorder)
@@ -289,7 +281,7 @@ namespace AsciiProgram
                 m_textBounds = m_windowSize;            
             }
 
-            m_messageFormatter.FormatText(m_message, m_textBounds, m_textWrapping);
+            m_messageFormatter.FormatText(m_message, m_textBounds);
         }
     }
 }

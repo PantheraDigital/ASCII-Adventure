@@ -25,7 +25,6 @@ namespace AsciiProgram
 
     public class Inventory : Component
     {
-        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         List<GameObject> m_gameObjects;
         GameWindow m_display;
 
@@ -42,16 +41,6 @@ namespace AsciiProgram
             if (m_display != null)
             {
                 m_display.Draw();
-            }
-
-            fastWrite.SetCursorPosition(m_display.GetScreenPosition());
-            if(m_gameObjects.Count == 0)
-                fastWrite.AddToBuffer(this.ToString(), "empty", ConsoleColor.Cyan);
-            else
-            {
-                fastWrite.ClearLayer(this.ToString());
-                foreach (GameObject obj in m_gameObjects)
-                    fastWrite.AddToBuffer(this.ToString(), obj.m_displayObject.m_spriteChar.ToString(), ConsoleColor.Cyan);
             }
         }
 
