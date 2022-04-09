@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="programfiles\Controllers\Controller.cs" />
+    <Compile Include="programfiles\gameObjects\DoorObject.cs" />
     <Compile Include="programfiles\gameObjects\KeyObject.cs" />
     <Compile Include="programfiles\gameObjects\ObjectData\LevelChangeTracker.cs" />
     <Compile Include="programfiles\gameObjects\ObjectData\NoteWindowMaker.cs" />

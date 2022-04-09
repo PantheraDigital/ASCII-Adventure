@@ -173,6 +173,15 @@ namespace AsciiProgram
                         objectToAdd = new NoteObject(new DisplayObject(objectType, position), gameWindow);
                     break;
 
+                case 'k':
+                    objectToAdd = new KeyObject(new DisplayObject(objectType, position));
+                    break;
+
+
+                case '!':
+                    objectToAdd = new DoorObject(new DisplayObject(objectType, position));
+                    break;
+
                 case '*':
                     string nextLevel = LevelChangeTracker.GetNextLevelChange(levelName);
                     if(nextLevel != null)

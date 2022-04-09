@@ -8,29 +8,24 @@ namespace AsciiProgram
 {
     class KeyObject : GameObject
     {
-
-        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         public KeyObject(DisplayObject displayObject, string name = "none", string tags = "none")
-            :base(displayObject, false)
+            :base(displayObject, false, name)
         {
-            if (name != "none")
-                m_name = name;
-
-            if (tags != "none")
-                m_tags = tags;
+            if (tags == "none")
+                tags = "key";
+            else
+                tags += " key";
         }
 
         public override void OnCollide(MovingEntity other)
         {
-            //check if has inventory
-            //add self to inventory
-
-            fastWrite.AddToBuffer(0, 0, this.ToString(), "fire1");
-            IComponentManager obj = other as IComponentManager;
-            if(obj != null && obj.HasComponent("Inventory"))
+            ComplexEntity obj = other as ComplexEntity;
+            if (obj != null)
             {
-                fastWrite.AddToBuffer(0, 0, this.ToString(), "fire2");
-                obj.GetComponent<Inventory>("Inventory").Add(this);
+                if (obj.HasComponent("Inventory"))
+                {
+                    obj.GetComponent<Inventory>("Inventory").Add(this);
+                }
             }
 
             //level will need to know to remove (pickup event?)

@@ -55,10 +55,13 @@ namespace AsciiProgram
                         if (m_gameObjects.ContainsKey(m_movingEntities[i].GetCurrentPosition()))
                             m_gameObjects[m_movingEntities[i].GetCurrentPosition()].EndCollide();
 
-                        m_movingEntities[i].Move();
+                        if (m_gameObjects.ContainsKey(m_movingEntities[i].GetMoveLocation()) && m_gameObjects[m_movingEntities[i].GetMoveLocation()].m_solid)
+                            m_gameObjects[m_movingEntities[i].GetMoveLocation()].OnCollide(m_movingEntities[i]);
+                        else
+                            m_movingEntities[i].Move();
 
                         Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
-                        m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
+                        //m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
 
                         if (m_gameObjects.ContainsKey(coverdTilePos))
                             m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);

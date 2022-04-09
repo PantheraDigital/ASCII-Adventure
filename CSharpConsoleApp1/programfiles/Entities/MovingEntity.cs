@@ -61,6 +61,58 @@ namespace AsciiProgram
             return m_gameObjects;
         }
 
+        public bool HasObjectWithTag(string tag)
+        {
+            foreach(GameObject obj in m_gameObjects)
+            {
+                if (obj.m_tags.Contains(tag))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public GameObject GetObjectWithTag(string tag)
+        {
+            for(int i = 0; i < m_gameObjects.Count; ++i)
+            {
+                if(m_gameObjects[i].m_tags.Contains(tag))
+                {
+                    GameObject temp = m_gameObjects[i];
+                    m_gameObjects.RemoveAt(i);
+                    return temp;
+                }
+            }
+
+            return null;
+        }
+
+        public bool HasObject(string name)
+        {
+            foreach (GameObject obj in m_gameObjects)
+            {
+                if (obj.m_name.Equals(name))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public GameObject GetObjectByName(string name)
+        {
+            for (int i = 0; i < m_gameObjects.Count; ++i)
+            {
+                if (m_gameObjects[i].m_name.Equals(name))
+                {
+                    GameObject temp = m_gameObjects[i];
+                    m_gameObjects.RemoveAt(i);
+                    return temp;
+                }
+            }
+
+            return null;
+        }
+
         public bool Remove(GameObject gameObject)
         {
             if (gameObject != null && m_gameObjects.Contains(gameObject))
