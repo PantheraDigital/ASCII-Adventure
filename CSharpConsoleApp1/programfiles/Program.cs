@@ -58,7 +58,7 @@ namespace AsciiProgram
             quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
             
             GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-            startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
+            startWindow.SetMessage("\n\n-----------------------Press any key to play----------", ConsoleColor.Cyan, ConsoleColor.Black);
             //startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 

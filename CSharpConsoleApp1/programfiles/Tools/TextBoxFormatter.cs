@@ -16,136 +16,73 @@ namespace AsciiProgram
             m_text = new List<string>();
         }
 
-        public List<string> FormatText(string text, Vector2 bounds, bool textWrapping)
+        public List<string> FormatText(string text, Vector2 bounds, bool textWrap)
         {
-            /*
-            string[] words = text.Split(' ');
+            List<string> formattedString = new List<string>();
+            int index = 0;
 
-            if (m_text.Count == 0)
-                m_text.Add("");
+            string[] lines = text.Split('\n');
 
-            int lineIndex = m_text.Count - 1;
-
-            if (lineIndex < 0)
-                lineIndex = 0;
-
-
-            foreach (string word in words)
+            foreach (string line in lines)
             {
-                if (textWrapping && m_text[lineIndex].Length == bounds.x)
+                if (line.Length > bounds.x)//line too long
                 {
-                    m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
-                    m_text.Add("");
-                    ++lineIndex;
-                }
+                    formattedString.Add("");
+                    string[] words = line.Split(' ');
 
-                if (!textWrapping && (word + m_text[lineIndex]).Length > bounds.x && !String.IsNullOrEmpty(m_text[0]))
-                    break;
-
-                if (word.Length > bounds.x || word.Contains('\n'))
-                {
-                    //cut out newlines and make word fit on line
-                    string wordCopy = word;
-
-                    do//while wordCopy contains'\n' or is longer than bounds.x
+                    foreach (string word in words)//go through words
                     {
-                        if (textWrapping && m_text[lineIndex].Length == bounds.x)
+                        if (word.Length > bounds.x)//word too long
                         {
-                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
-                            m_text.Add("");
-                            ++lineIndex;
-                        }
+                            string[] cutWord;
 
-                        if (wordCopy.Contains('\n'))
-                        {
-                            int cutWordLength;
-                            string cutWord;
-                            bool add1 = false;
-                            bool longWord = false;//if a word longer than bounds has a '/n'
-
-                            if (wordCopy.IndexOf('\n') + m_text[lineIndex].Length > bounds.x)
-                            {
-                                longWord = true;
-                                cutWordLength = bounds.x - m_text[lineIndex].Length;
-                            }
+                            //cut word into segments that fit
+                            if (formattedString[index].Length == 0)
+                                cutWord = FitWordToLine(word, bounds);
                             else
+                                cutWord = FitWordToLine(word, bounds, bounds.x - formattedString[index].Length);
+
+                            //add int cut up word
+                            for (int i = 0; i < cutWord.Length; ++i)
                             {
-                                add1 = true;
-                                cutWordLength = wordCopy.IndexOf('\n');
+                                if ((cutWord[i] + formattedString[index]).Length > bounds.x)
+                                {
+                                    formattedString.Add(cutWord[i]);
+                                    ++index;
+                                }
+                                else
+                                    formattedString[index] += cutWord[i];
                             }
 
-                            cutWord = wordCopy.Substring(0, cutWordLength);
-                            m_text[lineIndex] = m_text[lineIndex] + cutWord;
-                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
-                            m_text.Add("");
-                            ++lineIndex;
-
-                            if (add1)
-                                cutWordLength += 1;
-
-                            wordCopy = wordCopy.Remove(0, cutWordLength);
-                            if (longWord && !textWrapping)
-                                wordCopy = "";
                         }
-                        else
+                        else if ((formattedString[index] + word + " ").Length > bounds.x)//word and space wont fit on line
                         {
-                            int cutWordLength;
-                            string cutWord;
-
-                            if (wordCopy.Length > bounds.x - m_text[lineIndex].Length)
-                                cutWordLength = bounds.x - m_text[lineIndex].Length;
+                            formattedString[index] = formattedString[index].Trim(' ');
+                            formattedString.Add(word);
+                            ++index;
+                        }
+                        else//word fits
+                        {
+                            if (formattedString[index].Length == 0)
+                                formattedString[index] += word;
                             else
-                                cutWordLength = wordCopy.Length;
-
-                            cutWord = wordCopy.Substring(0, cutWordLength);
-                            m_text[lineIndex] = m_text[lineIndex] + cutWord;
-                            wordCopy = wordCopy.Remove(0, cutWordLength);
+                                formattedString[index] += " " + word;
                         }
 
-                    } while (wordCopy.Contains('\n') || wordCopy.Length > bounds.x);
-
-
-                    if (wordCopy.Length > 0)
-                    {
-                        if ((wordCopy + m_text[lineIndex]).Length + 1 <= bounds.x)
-                            m_text[lineIndex] = m_text[lineIndex] + wordCopy + " ";
-                        else if ((wordCopy + m_text[lineIndex]).Length <= bounds.x)
-                            m_text[lineIndex] = m_text[lineIndex] + wordCopy;
-                        else if (textWrapping)
-                        {
-                            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
-                            m_text.Add(wordCopy);
-                            ++lineIndex;
-                        }
                     }
 
                 }
-                else //word can fit in a line and contains no '\n'
+                else//line fits
                 {
-                    if ((word + m_text[lineIndex]).Length + 1 <= bounds.x)
-                    {
-                        m_text[lineIndex] = m_text[lineIndex] + word + " ";
-                    }
-                    else if ((word + m_text[lineIndex]).Length <= bounds.x)
-                    {
-                        m_text[lineIndex] = m_text[lineIndex] + word;
-                    }
-                    else if (textWrapping)
-                    {
-                        m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
-                        m_text.Add(word);
-                        ++lineIndex;
-                    }
+                    formattedString.Add(line);
+                    ++index;
                 }
+
             }
 
-            m_text[lineIndex] = m_text[lineIndex].TrimEnd(' ');
 
-            return m_text;*/
-
-            Format(text, bounds, textWrapping);
+            m_text = formattedString;
             return m_text;
-
         }
 
         public List<string> GetFormattedText()
@@ -153,97 +90,37 @@ namespace AsciiProgram
             return m_text;
         }
 
-        void Format(string text, Vector2 bounds, bool textWrapping)
+        string[] FitWordToLine(string word, Vector2 bounds, int firstLineSpace = 0)
         {
-            if (m_text.Count == 0)
-                m_text.Add("");
-
-            int lineIndex = m_text.Count - 1;
-
-            if (lineIndex < 0)
-                lineIndex = 0;
-
-            List<string> formattedString = new List<string>();
-
             FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
+            fastWrite.SetCursorPosition(new Vector2(0, 0));
 
-            if(textWrapping == false)
+            List<string> result = new List<string>();
+            while(word.Length > 0)
             {
-                string[] lines = text.Split('\n');
-
-                foreach(string line in lines)
+                if(firstLineSpace != 0)
                 {
-                    if(line.Length > bounds.x)
+                    result.Add(word.Substring(0, firstLineSpace));
+                    word = word.Remove(0, firstLineSpace);
+                    firstLineSpace = 0;
+                }
+                else
+                {
+                    if(word.Length > bounds.x)
                     {
-                        string[] words = line.Split(' ');
-                        string lineToAdd = "";
-
-                        foreach(string word in words)
-                        {
-                            if ((lineToAdd + word + " ").Length > bounds.x)
-                            {
-                                formattedString.Add(lineToAdd.Trim(' '));
-                                lineToAdd = word;
-                            }
-                            else if(word.Length > bounds.x)
-                            {
-                                formattedString.Add(lineToAdd.Trim(' '));
-                                formattedString.Add(word.Substring(0, bounds.x));
-                                lineToAdd = "";
-                            }
-                            else
-                                lineToAdd = lineToAdd + word + " ";
-                        }
-                        if(lineToAdd.Length > 0)
-                        {
-                            if (lineToAdd.Length + formattedString[formattedString.Count - 1].Length + 1 > bounds.x)
-                                formattedString.Add(lineToAdd);
-                            else
-                                formattedString[formattedString.Count - 1] += lineToAdd;
-                        }
-
+                        result.Add(word.Substring(0, bounds.x));
+                        word = word.Remove(0, bounds.x);
                     }
                     else
                     {
-                        formattedString.Add(line);
+                        result.Add(word.Substring(0, word.Length));
+                        word = word.Remove(0, word.Length);
+                        break;
                     }
-                        
                 }
             }
-            else
-            {
-                do
-                {
-                    int offset = 0;
-                    if (text.Length > bounds.x && text[bounds.x] != ' ')
-                    {
-                        while (offset < bounds.x || text[bounds.x - offset] != ' ')
-                            ++offset;
-                    }
 
-                    formattedString.Add(text.Substring(0, bounds.x - offset));
-                    text.Remove(0, bounds.x - offset);
-                } while (text.Length > bounds.x);
-
-                if (text.Length > 0)
-                    formattedString.Add(text);
-
-                for(int i = 0; i < formattedString.Count; ++i)
-                {
-                    if(formattedString[i].Contains('\n'))
-                    {
-                        string[] cutLines = formattedString[i].Split('\n');
-                        for(int x = cutLines.Length - 1; x >= 0 ; --x)
-                        {
-                            formattedString.Insert(i, cutLines[x]);
-                        }
-                    }
-                    
-                }
-
-            }
-
-            m_text = formattedString;
+            return result.ToArray();
         }
 
     }
