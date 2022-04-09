@@ -61,7 +61,6 @@ namespace AsciiProgram
                             m_movingEntities[i].Move();
 
                         Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
-                        //m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
 
                         if (m_gameObjects.ContainsKey(coverdTilePos))
                             m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);

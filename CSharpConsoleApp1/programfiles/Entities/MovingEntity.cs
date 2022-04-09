@@ -25,6 +25,8 @@ namespace AsciiProgram
 
     public class Inventory : Component
     {
+
+        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         List<GameObject> m_gameObjects;
         GameWindow m_display;
 
@@ -42,6 +44,10 @@ namespace AsciiProgram
             {
                 m_display.Draw();
             }
+
+            fastWrite.SetCursorPosition(m_display.GetScreenPosition());
+            foreach (GameObject obj in m_gameObjects)
+                fastWrite.AddToBuffer("test", obj.m_displayObject.m_spriteChar);
         }
 
         public bool Add(GameObject gameObject)
@@ -74,9 +80,9 @@ namespace AsciiProgram
 
         public GameObject GetObjectWithTag(string tag)
         {
-            for(int i = 0; i < m_gameObjects.Count; ++i)
+            for (int i = 0; i < m_gameObjects.Count; ++i)
             {
-                if(m_gameObjects[i].m_tags.Contains(tag))
+                if (m_gameObjects[i].m_tags.Contains(tag))
                 {
                     GameObject temp = m_gameObjects[i];
                     m_gameObjects.RemoveAt(i);
@@ -105,7 +111,7 @@ namespace AsciiProgram
                 if (m_gameObjects[i].m_name.Equals(name))
                 {
                     GameObject temp = m_gameObjects[i];
-                    m_gameObjects.RemoveAt(i);
+                    m_gameObjects.Remove(m_gameObjects[i]);
                     return temp;
                 }
             }

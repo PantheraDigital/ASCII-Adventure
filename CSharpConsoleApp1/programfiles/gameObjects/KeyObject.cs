@@ -12,9 +12,9 @@ namespace AsciiProgram
             :base(displayObject, false, name)
         {
             if (tags == "none")
-                tags = "key";
+                m_tags = "key";
             else
-                tags += " key";
+                m_tags += " key";
         }
 
         public override void OnCollide(MovingEntity other)
