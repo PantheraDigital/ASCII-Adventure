@@ -144,7 +144,7 @@ namespace AsciiProgram
         {
             if (text != null && m_message.Contains(text))
             {
-                m_message.Remove(m_message.IndexOf(text), text.Length);
+                m_message = m_message.Remove(m_message.IndexOf(text), text.Length);
                 m_updated = true;
                 UpdateTextBounds();
             }

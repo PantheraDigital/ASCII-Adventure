@@ -70,7 +70,7 @@ namespace AsciiProgram
 
 
             game = new LevelManager();
-            game.Initialize("mazeLevel1", player);
+            game.Initialize("mazeLevel2", player);
             game.Run();
 
 

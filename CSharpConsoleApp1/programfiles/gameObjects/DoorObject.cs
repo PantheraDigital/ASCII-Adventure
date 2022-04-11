@@ -20,7 +20,7 @@ namespace AsciiProgram
         public override void OnCollide(MovingEntity other)
         {
             ComplexEntity obj = other as ComplexEntity;
-            if (obj != null)
+            if (obj != null && m_solid)
             {
                 if (obj.HasComponent("Inventory") && obj.GetComponent<Inventory>("Inventory").GetObjectWithTag("key") != null)
                 {

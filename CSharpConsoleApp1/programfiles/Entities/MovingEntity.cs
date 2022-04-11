@@ -44,10 +44,6 @@ namespace AsciiProgram
             {
                 m_display.Draw();
             }
-
-            fastWrite.SetCursorPosition(m_display.GetScreenPosition());
-            foreach (GameObject obj in m_gameObjects)
-                fastWrite.AddToBuffer("test", obj.m_displayObject.m_spriteChar);
         }
 
         public bool Add(GameObject gameObject)
@@ -85,7 +81,7 @@ namespace AsciiProgram
                 if (m_gameObjects[i].m_tags.Contains(tag))
                 {
                     GameObject temp = m_gameObjects[i];
-                    m_gameObjects.RemoveAt(i);
+                    m_display.RemoveFromMessage(temp.m_displayObject.m_spriteChar.ToString());
                     return temp;
                 }
             }
