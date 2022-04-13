@@ -186,7 +186,7 @@ namespace AsciiProgram
                     string nextLevel = LevelChangeTracker.GetNextLevelChange(levelName);
                     if(nextLevel != null)
                     {
-                        LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), nextLevel);
+                        LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, ConsoleColor.Green, ConsoleColor.Black, position), nextLevel);
                         temp.LevelChange += game.ChangeLevel;
                         objectToAdd = temp;
                     }

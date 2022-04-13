@@ -46,11 +46,10 @@ namespace AsciiProgram
 
         struct LevelNotes
         {
-            public static NoteWindowData[] mazeLevel1Notes = { new NoteWindowData("helloNote", new Vector2(1,1), new Vector2(9,5), "Hello there!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Cyan),
-                new NoteWindowData("byeMessage", new Vector2(1,1), new Vector2(9, 5), "good bye", ConsoleColor.Red) };
+            public static NoteWindowData[] mazeLevel1Notes = { };
 
 
-            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData("hiNote", new Vector2(1, 1), new Vector2(9, 5), "Hello\nthere!", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
+            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData("startNote", new Vector2(1, 1), new Vector2(20, 8), "\nA key(k) will let you pass but an exit(*) will set you free", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
 
         }
 

@@ -19,15 +19,6 @@ namespace AsciiProgram
         public override void OnCollide(MovingEntity other)
         {
             m_window.Draw();
-
-            ComplexEntity obj = other as ComplexEntity;
-            if (obj != null)
-            {
-                if (obj.HasComponent("Inventory"))
-                {
-                    obj.GetComponent<Inventory>("Inventory").Add(this);
-                }
-            }
         }
 
         public override void EndCollide()
