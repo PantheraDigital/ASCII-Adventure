@@ -9,7 +9,7 @@ namespace AsciiProgram
     class DoorObject : GameObject
     {
         public DoorObject(DisplayObject displayObject, string name = "none", string tags = "none")
-            : base(displayObject, true, name)
+            : base(displayObject, true, false, name)
         {
             if (tags != "none")
                 m_tags = tags + " door";

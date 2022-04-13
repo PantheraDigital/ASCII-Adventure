@@ -9,26 +9,14 @@ namespace AsciiProgram
     class KeyObject : GameObject
     {
         public KeyObject(DisplayObject displayObject, string name = "none", string tags = "none")
-            :base(displayObject, false, name)
+            :base(displayObject, false, true, name)
         {
+            m_pickUp = true;
             if (tags == "none")
                 m_tags = "key";
             else
                 m_tags += " key";
         }
 
-        public override void OnCollide(MovingEntity other)
-        {
-            ComplexEntity obj = other as ComplexEntity;
-            if (obj != null)
-            {
-                if (obj.HasComponent("Inventory"))
-                {
-                    obj.GetComponent<Inventory>("Inventory").Add(this);
-                }
-            }
-
-            //level will need to know to remove (pickup event?)
-        }
     }
 }

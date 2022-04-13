@@ -15,11 +15,11 @@ namespace AsciiProgram
         public string m_name { get; protected set; }
         public string m_tags { get; protected set; }
 
-        public GameObject(DisplayObject display, bool solid, string name = "none", string tags = "none")
+        public GameObject(DisplayObject display, bool solid, bool pickup, string name = "none", string tags = "none")
         {
             m_displayObject = display;
             m_solid = solid;
-            m_pickUp = false;
+            m_pickUp = pickup;
 
             if (name != "none")
                 m_name = name;

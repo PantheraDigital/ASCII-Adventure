@@ -11,7 +11,7 @@ namespace AsciiProgram
         GameWindow m_window;
 
         public NoteObject(DisplayObject display, GameWindow gameWindow)
-            : base(display, false)
+            : base(display, false, false)
         {
             m_window = gameWindow;
         }

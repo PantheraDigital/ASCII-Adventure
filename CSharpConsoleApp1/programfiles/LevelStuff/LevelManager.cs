@@ -37,6 +37,7 @@ namespace AsciiProgram
 
                 m_levelCam.CenterCameraOn(m_player.GetCurrentPosition());
                 m_levelCam.UpdateDisplayList(m_currentLevel);
+
                 m_levelCam.Draw(0);
                 m_player.DrawComponents();
 

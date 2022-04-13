@@ -25,8 +25,7 @@ namespace AsciiProgram
 
     public class Inventory : Component
     {
-
-        FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
+        //FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         List<GameObject> m_gameObjects;
         GameWindow m_display;
 
@@ -44,6 +43,23 @@ namespace AsciiProgram
             {
                 m_display.Draw();
             }
+
+            /*
+            Vector2 pos = m_display.GetScreenPosition();
+            fastWrite.SetCursorPosition(pos);
+            if(m_gameObjects.Count == 0)
+            {
+                fastWrite.AddToBuffer("test", "empty");
+            }
+            else
+            {
+                fastWrite.ClearLayer("test");
+                foreach (GameObject obj in m_gameObjects)
+                {
+                    fastWrite.AddToBuffer("test", obj.m_displayObject.m_spriteChar.ToString());
+                }
+            }*/
+            
         }
 
         public bool Add(GameObject gameObject)
@@ -82,6 +98,7 @@ namespace AsciiProgram
                 {
                     GameObject temp = m_gameObjects[i];
                     m_display.RemoveFromMessage(temp.m_displayObject.m_spriteChar.ToString());
+                    m_gameObjects.Remove(m_gameObjects[i]);
                     return temp;
                 }
             }
@@ -98,33 +115,6 @@ namespace AsciiProgram
             }
 
             return false;
-        }
-
-        public GameObject GetObjectByName(string name)
-        {
-            for (int i = 0; i < m_gameObjects.Count; ++i)
-            {
-                if (m_gameObjects[i].m_name.Equals(name))
-                {
-                    GameObject temp = m_gameObjects[i];
-                    m_gameObjects.Remove(m_gameObjects[i]);
-                    return temp;
-                }
-            }
-
-            return null;
-        }
-
-        public bool Remove(GameObject gameObject)
-        {
-            if (gameObject != null && m_gameObjects.Contains(gameObject))
-            {
-                m_gameObjects.Remove(gameObject);
-                m_display.RemoveFromMessage(gameObject.m_displayObject.m_spriteChar.ToString());
-                return true;
-            }
-            else
-                return false;
         }
     }
 
@@ -185,14 +175,12 @@ namespace AsciiProgram
     public class MovingEntity : Entity 
     {
         Vector2 m_movePosition;
-        string m_tags;
-
+        
 
         public MovingEntity(DisplayObject displayObject, Controller controller, string tags = "none")
-            : base(displayObject, controller)
+            : base(displayObject, controller, tags)
         {
             m_movePosition = m_displayObject.m_displayPosition;
-            m_tags = tags;
         }
 
         public override void Update()
@@ -235,11 +223,6 @@ namespace AsciiProgram
         public void Move()
         {
             m_displayObject.m_displayPosition = m_movePosition;
-        }
-
-        public string GetTags()
-        {
-            return m_tags;
         }
     }
 }

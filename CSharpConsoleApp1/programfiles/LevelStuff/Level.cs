@@ -48,25 +48,48 @@ namespace AsciiProgram
             {
                 m_movingEntities[i].Update();
 
-                if (!m_movingEntities[i].GetMoveLocation().IsEqual(m_movingEntities[i].GetCurrentPosition()))
+                Vector2 moveLocation = m_movingEntities[i].GetMoveLocation();
+                Vector2 currentLocation = m_movingEntities[i].GetCurrentPosition();
+
+                if (!moveLocation.IsEqual(currentLocation))
                 {
-                    if (ValidateMove(m_movingEntities[i].GetMoveLocation()))
+                    if (ValidateMove(moveLocation))
                     {
-                        if (m_gameObjects.ContainsKey(m_movingEntities[i].GetCurrentPosition()))
-                            m_gameObjects[m_movingEntities[i].GetCurrentPosition()].EndCollide();
+                        //end collide before moving out of location
+                        if (m_gameObjects.ContainsKey(currentLocation))
+                            m_gameObjects[currentLocation].EndCollide();
 
-                        if (m_gameObjects.ContainsKey(m_movingEntities[i].GetMoveLocation()) && m_gameObjects[m_movingEntities[i].GetMoveLocation()].m_solid)
-                            m_gameObjects[m_movingEntities[i].GetMoveLocation()].OnCollide(m_movingEntities[i]);
+                        //collide if object is solid, else move
+                        if (m_gameObjects.ContainsKey(moveLocation) && m_gameObjects[moveLocation].m_solid)
+                            m_gameObjects[moveLocation].OnCollide(m_movingEntities[i]);
                         else
+                        {
                             m_movingEntities[i].Move();
+                            currentLocation = m_movingEntities[i].GetCurrentPosition();
+                        }
 
-                        Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
+                        //collide with new position                    
+                        if (m_gameObjects.ContainsKey(currentLocation))
+                        {
+                            m_gameObjects[currentLocation].OnCollide(m_movingEntities[i]);
 
-                        if (m_gameObjects.ContainsKey(coverdTilePos))
-                            m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);
+                            if(m_movingEntities[i].HasTag("Player") && m_gameObjects[currentLocation].m_pickUp == true)
+                            {
+                                ComplexEntity obj = m_movingEntities[i] as ComplexEntity;
+                                if (obj != null)
+                                {
+                                    if (obj.HasComponent("Inventory"))
+                                    {
+                                        obj.GetComponent<Inventory>("Inventory").Add(m_gameObjects[currentLocation]);
+                                        m_gameObjects.Remove(currentLocation);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
         }
 
 
