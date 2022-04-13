@@ -12,7 +12,7 @@ namespace AsciiProgram
         string m_levelName;
 
         public LevelChangeObject(DisplayObject displayObject, string levelName)
-            :base(displayObject, false)
+            :base(displayObject, false, false)
         {
             m_levelName = levelName;
         }

@@ -80,8 +80,8 @@ namespace AsciiProgram
                                 {
                                     if (obj.HasComponent("Inventory"))
                                     {
-                                        obj.GetComponent<Inventory>("Inventory").Add(m_gameObjects[currentLocation]);
-                                        m_gameObjects.Remove(currentLocation);
+                                        if(obj.GetComponent<Inventory>("Inventory").Add(m_gameObjects[currentLocation]))
+                                            m_gameObjects.Remove(currentLocation);
                                     }
                                 }
                             }

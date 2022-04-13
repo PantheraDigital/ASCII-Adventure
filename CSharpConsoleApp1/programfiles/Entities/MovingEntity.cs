@@ -28,13 +28,15 @@ namespace AsciiProgram
         //FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
         List<GameObject> m_gameObjects;
         GameWindow m_display;
+        int m_sizeLimit;
 
-        public Inventory(GameWindow gameWindow)
+        public Inventory(GameWindow gameWindow, int sizeLimit = 0)
             :base("Inventory")
         {
             m_gameObjects = new List<GameObject>();
             m_display = gameWindow;
             m_display.SetMessage("");
+            m_sizeLimit = sizeLimit;
         }
 
         public override void Draw()
@@ -64,6 +66,9 @@ namespace AsciiProgram
 
         public bool Add(GameObject gameObject)
         {
+            if (m_sizeLimit > 0 && m_gameObjects.Count >= m_sizeLimit)
+                return false;
+
             if (gameObject != null)
             {
                 m_gameObjects.Add(gameObject);

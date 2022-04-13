@@ -45,7 +45,7 @@ namespace AsciiProgram
             GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 11, Console.WindowHeight - 7), new Vector2(10, 6), '-', ConsoleColor.Gray);
             pInv.SetBorderChar('\\');
             pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-            player.AddComponent(new Inventory(pInv));
+            player.AddComponent(new Inventory(pInv,1));
             
             //List<MovingEntity> players = new List<MovingEntity>();
             //players.Add(player);
