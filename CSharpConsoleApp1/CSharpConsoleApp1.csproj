@@ -45,7 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="programfiles\Components\Component.cs" />
+    <Compile Include="programfiles\Components\Inventory.cs" />
     <Compile Include="programfiles\Controllers\Controller.cs" />
+    <Compile Include="programfiles\Entities\ComplexEntity.cs" />
     <Compile Include="programfiles\gameObjects\DoorObject.cs" />
     <Compile Include="programfiles\gameObjects\KeyObject.cs" />
     <Compile Include="programfiles\gameObjects\ObjectData\LevelChangeTracker.cs" />
