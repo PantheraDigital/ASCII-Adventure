@@ -6,20 +6,15 @@ using System.Threading.Tasks;
 
 namespace AsciiProgram
 {
-
-    public class MovingEntity : Entity//make interface? IMove? 
+    public class MovingEntity : Entity 
     {
         Vector2 m_movePosition;
-        //bool m_moved;
-        string m_tags;
-
+        
 
         public MovingEntity(DisplayObject displayObject, Controller controller, string tags = "none")
-            : base(displayObject, controller)
+            : base(displayObject, controller, tags)
         {
             m_movePosition = m_displayObject.m_displayPosition;
-            //m_moved = false;
-            m_tags = tags;
         }
 
         public override void Update()
@@ -29,12 +24,7 @@ namespace AsciiProgram
 
 
             m_controller.Update();
-
-            //if (m_moved)
-            //    m_moved = false;
-            //else
-                m_movePosition = m_displayObject.m_displayPosition;
-
+            m_movePosition = m_displayObject.m_displayPosition;
 
             if (m_controller.HasInput())
             {
@@ -67,12 +57,6 @@ namespace AsciiProgram
         public void Move()
         {
             m_displayObject.m_displayPosition = m_movePosition;
-            //m_moved = true;
-        }
-
-        public string GetTags()
-        {
-            return m_tags;
         }
     }
 }

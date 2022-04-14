@@ -70,7 +70,11 @@ namespace FastConsole
             public CharInfo charInfo;
         }
 
+
         static FastWrite instance;
+
+        //name of owners. Layer is index
+        static List<string> layerOwners;
 
         static SafeFileHandle handle;
         static List<List<CharSetInfo>> bufList;
@@ -83,6 +87,7 @@ namespace FastConsole
         private FastWrite()
         {
             InitializeBuffer();
+            layerOwners = new List<string>();
         }
 
         static public FastWrite GetInstance()
@@ -92,6 +97,7 @@ namespace FastConsole
             
             return instance;
         }
+
 
         public static bool InitializeBuffer(short bufferX = 0, short bufferY = 0)
         {
@@ -152,6 +158,17 @@ namespace FastConsole
             return -1;
         }
 
+        int GetLayer(string objectName)
+        {
+            if (layerOwners.Contains(objectName))
+                return layerOwners.IndexOf(objectName);
+            else
+            {
+                layerOwners.Add(objectName);
+                return layerOwners.Count - 1;
+            }
+        }
+
         public bool SetCursorPosition(Vector2 position)
         {
             if (ValidCursorPosition(position))
@@ -163,7 +180,7 @@ namespace FastConsole
             return false;
         }
 
-        public void AddToBuffer(int layer, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+         void AddToBuffer(int layer, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
             if(!ValidCursorPosition(cursorPosition))
             {
@@ -174,9 +191,16 @@ namespace FastConsole
             {
                 //add missing layers
                 int layersToAdd = layer - bufList.Count + 1;
-                for (int i = 0; i < layersToAdd; ++i)
+                if(layersToAdd == 1)
                 {
                     bufList.Add(new List<CharSetInfo>(new CharSetInfo[bufWidth * bufHeight]));
+                }
+                else
+                {
+                    for (int i = 0; i < layersToAdd; ++i)
+                    {
+                        bufList.Add(new List<CharSetInfo>(new CharSetInfo[bufWidth * bufHeight]));
+                    }
                 }
             }
 
@@ -204,7 +228,7 @@ namespace FastConsole
             else
                 cursorPosition.x += 1;
         }
-        public void AddToBuffer(int x, int y, int layer, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+         void AddToBuffer(int x, int y, int layer, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
             cursorPosition.x = x;
             cursorPosition.y = y;
@@ -212,7 +236,7 @@ namespace FastConsole
             AddToBuffer(layer, input, foreground, background);
 
         }
-        public void AddToBuffer(int x, int y, int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+         void AddToBuffer(int x, int y, int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
             cursorPosition.x = x;
             cursorPosition.y = y;
@@ -222,11 +246,26 @@ namespace FastConsole
                 AddToBuffer(layer, input[i], foreground, background);
             }
         }
-        public void AddToBuffer(int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+         void AddToBuffer(int layer, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
         {
             AddToBuffer(cursorPosition.x, cursorPosition.y, layer, input, foreground, background);
         }
-        
+        public void AddToBuffer(string objectName, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+        {
+            AddToBuffer(GetLayer(objectName), input, foreground, background);
+        }
+        public void AddToBuffer(string objectName, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+        {
+            AddToBuffer(GetLayer(objectName), input, foreground, background);
+        }
+        public void AddToBuffer(int x, int y, string objectName, string input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+        {
+            AddToBuffer(x, y, GetLayer(objectName), input, foreground, background);
+        }
+        public void AddToBuffer(int x, int y, string objectName, char input, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+        {
+            AddToBuffer(x, y, GetLayer(objectName), input, foreground, background);
+        }
 
         public void DisplayBuffer()
         {
@@ -255,13 +294,23 @@ namespace FastConsole
             Console.Clear();
         }
 
-        public void ClearLayer(int layer)
+        public void ClearLayer(string objectName)
         {
+            int layer = GetLayer(objectName);
             if (ValidLayer(layer))
             {
                 bufList[layer].Clear();
                 bufList[layer].AddRange(new CharSetInfo[bufWidth * bufHeight]);
+                RemoveLayer(objectName);
             }
+        }
+
+        void RemoveLayer(string objectName)
+        {
+            int index = layerOwners.IndexOf(objectName);
+            bufList.Remove(bufList[index]);
+
+            layerOwners.Remove(objectName);
         }
     }
     

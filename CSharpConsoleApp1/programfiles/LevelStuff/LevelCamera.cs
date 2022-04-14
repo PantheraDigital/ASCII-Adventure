@@ -36,11 +36,14 @@ namespace AsciiProgram
 
         public LevelCamera(Vector2 position, Vector2 displayBounds, Vector2 displayOffset)
         {
-            m_displayOffset = displayOffset;
             m_cameraPosition = position;
             m_emptyChar = ' ';
 
             InitalizeDisplaySize(displayBounds);
+
+            m_displayOffset = displayOffset;
+            m_displayOffset.x -= (int)(displayBounds.x / 2);
+            m_displayOffset.y -= (int)(displayBounds.y / 2);
 
             m_fastWrite = FastWrite.GetInstance();
         } 
@@ -132,11 +135,9 @@ namespace AsciiProgram
             }
         }
 
-        public void Draw(int layer)
+        public void Draw()
         {
-            List<Vector2> keys = m_displayList.Keys.ToList();
-
-            foreach (Vector2 key in keys)
+            foreach (Vector2 key in m_displayList.Keys.ToList())
             {
                 if (m_displayList[key].fresh)
                 {
@@ -147,17 +148,15 @@ namespace AsciiProgram
                     temp.x = m_displayList[key].display.m_displayPosition.x + temp.x;
                     temp.y = m_displayList[key].display.m_displayPosition.y + temp.y;
 
-                    m_fastWrite.AddToBuffer(temp.x, temp.y, layer, m_displayList[key].display.m_spriteChar, m_displayList[key].display.m_foregroudColor, m_displayList[key].display.m_backgroundColor);
+                    m_fastWrite.AddToBuffer(temp.x, temp.y, "GameLevel", m_displayList[key].display.m_spriteChar, m_displayList[key].display.m_foregroudColor, m_displayList[key].display.m_backgroundColor);
                     m_displayList[key] = new DisplayData(m_displayList[key].display, false);
                 }
             }
-
-            m_fastWrite.DisplayBuffer();
         }
 
-        public void Clear(int layer)
+        public void Clear()
         {
-            m_fastWrite.ClearLayer(layer);
+            m_fastWrite.ClearLayer("GameLevel");
         }
     }
 }

@@ -30,6 +30,7 @@ namespace AsciiProgram
 
 
             FastConsole.FastWrite.InitializeBuffer();
+            FastConsole.FastWrite fastWrite = FastConsole.FastWrite.GetInstance();
 
             PlayerController controller = new PlayerController();
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -38,32 +39,43 @@ namespace AsciiProgram
             int timesUpdated = 0;
 
             DisplayObject playerDisplay = new DisplayObject('&', ConsoleColor.Green, ConsoleColor.Black, new Vector2(1, 1));
-            MovingEntity player = new MovingEntity(playerDisplay, controller, "player");
+            ComplexEntity player = new ComplexEntity(playerDisplay, controller, "player");
+
+
+            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 25, Console.WindowHeight - 15), new Vector2(11, 6), '_', ConsoleColor.Gray);
+            pInv.SetBorderChar('\\');
+            pInv.SetBorderColor(ConsoleColor.DarkGray, ConsoleColor.Black);
+            pInv.SetShowName(true);
+            player.AddComponent(new Inventory(pInv,27));
             
-            List<MovingEntity> players = new List<MovingEntity>();
-            players.Add(player);
+            //List<MovingEntity> players = new List<MovingEntity>();
+            //players.Add(player);
 
-            GameWindow quitWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
-            quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
-            quitWindow.SetBorderChar('\\');
-            quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-
-            GameWindow startWindow = new GameWindow(new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
+            
+            GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Magenta);
+            quitWindow.SetMessage("Quitting game----------\n\n\nPress any key to leave-", ConsoleColor.Cyan, ConsoleColor.Black);
+            quitWindow.SetBorderChar('*');
+            quitWindow.SetBorderColor(ConsoleColor.Magenta, ConsoleColor.Black);
+            
+            GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
-            startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 
-            startWindow.Draw(1);
+            startWindow.Draw();
+            fastWrite.DisplayBuffer();
             Console.ReadKey(true);
             startWindow.Erase();
 
-            
+            fastWrite.DisplayBuffer();
+
+
             game = new LevelManager();
-            game.Initialize("mazeLevel1", player);
+            game.Initialize("mazeLevel2", player);
             game.Run();
 
 
-            quitWindow.Draw(1);
+            quitWindow.Draw();
+            fastWrite.DisplayBuffer();
             Console.ReadKey(true);
         }
 
@@ -73,14 +85,14 @@ namespace AsciiProgram
             Console.CursorVisible = true;
         }
 
-        public static Level SetUpLevel(string levelLayout, MovingEntity player)
+        public static Level SetUpLevel(string levelName, MovingEntity player)
         {
             List<List<Tile>> layout = new List<List<Tile>>();
             Dictionary<Vector2, GameObject> gameObjects = new Dictionary<Vector2, GameObject>();
             List<MovingEntity> entities = new List<MovingEntity>();
             Vector2 spawn = new Vector2(0,0);
 
-            string[] rows = GetLevelLayout(levelLayout).Split('\n');
+            string[] rows = GetLevelLayout(levelName).Split('\n');
 
             entities.Add(player);
 
@@ -99,7 +111,7 @@ namespace AsciiProgram
                         else
                             layout[y].Add(CreateTile('.', new Vector2(x, y)));
 
-                        GameObject gameObject = CreateGameObject(rows[y][x], new Vector2(x, y));
+                        GameObject gameObject = CreateGameObject(levelName, rows[y][x], new Vector2(x, y));
                         if (gameObject != null)
                             gameObjects.Add(new Vector2(x, y), gameObject);
 
@@ -150,23 +162,34 @@ namespace AsciiProgram
             }
         }
 
-        public static GameObject CreateGameObject(char objectType, Vector2 position)
+        public static GameObject CreateGameObject(string levelName, char objectType, Vector2 position)
         {
             GameObject objectToAdd = null;
             switch (objectType)
             {
                 case '^':
-                    GameWindow window = new GameWindow(new Vector2(1, 1), new Vector2(9, 5), '-', ConsoleColor.Magenta, ConsoleColor.Black);
-                    window.SetMessage("Hello\nThere", ConsoleColor.Cyan, ConsoleColor.Black);
-                    window.SetTextWrapping(true);
+                    GameWindow gameWindow = NoteWindowMaker.CreateNoteWindow(levelName);
+                    if (gameWindow != null)
+                        objectToAdd = new NoteObject(new DisplayObject(objectType, position), gameWindow);
+                    break;
 
-                    objectToAdd = new NoteObject(new DisplayObject(objectType, position), window);
+                case 'k':
+                    objectToAdd = new KeyObject(new DisplayObject(objectType, ConsoleColor.Yellow, ConsoleColor.Black, position));
+                    break;
+
+
+                case '!':
+                    objectToAdd = new DoorObject(new DisplayObject(objectType, position));
                     break;
 
                 case '*':
-                    LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, position), game, "mazeLevel2");
-                    temp.LevelChange += game.ChangeLevel;
-                    objectToAdd = temp;
+                    string nextLevel = LevelChangeTracker.GetNextLevelChange(levelName);
+                    if(nextLevel != null)
+                    {
+                        LevelChangeObject temp = new LevelChangeObject(new DisplayObject(objectType, ConsoleColor.Green, ConsoleColor.Black, position), nextLevel);
+                        temp.LevelChange += game.ChangeLevel;
+                        objectToAdd = temp;
+                    }
                     break;
             }
 

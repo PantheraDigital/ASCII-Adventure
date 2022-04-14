@@ -19,7 +19,6 @@ namespace AsciiProgram
         ConsoleColor m_windowBackgroundColor;
 
         TextBoxFormatter m_messageFormatter;
-        bool m_textWrapping;
         string m_message;
         ConsoleColor m_messageForegroundColor;
         ConsoleColor m_messageBackgroundColor;
@@ -32,13 +31,15 @@ namespace AsciiProgram
 
         bool m_active;
         bool m_updated;
-        int m_layer;
+        bool m_showName;
+        string m_windowName;
         FastWrite m_fastWrite;
 
 
 
-        public GameWindow(Vector2 screenPosition, Vector2 windowSize, char backgroundChar = ' ', ConsoleColor windowForegroundColor = ConsoleColor.White, ConsoleColor windowBackgroundColor = ConsoleColor.Black)
+        public GameWindow(string windowName, Vector2 screenPosition, Vector2 windowSize, char backgroundChar = ' ', ConsoleColor windowForegroundColor = ConsoleColor.White, ConsoleColor windowBackgroundColor = ConsoleColor.Black)
         {
+            m_windowName = windowName;
             m_screenPosition = screenPosition;
             m_windowSize = windowSize;
             m_backgroundChar = backgroundChar;
@@ -54,11 +55,8 @@ namespace AsciiProgram
 
             m_message = "";
 
-            m_textWrapping = false;
             m_useBorder = false;
             m_active = true;
-
-            m_layer = 0;
 
             m_fastWrite = FastWrite.GetInstance();
             m_messageFormatter = new TextBoxFormatter();
@@ -86,7 +84,7 @@ namespace AsciiProgram
         public void Erase()
         {
             m_active = false;
-            m_fastWrite.ClearLayer(m_layer);
+            m_fastWrite.ClearLayer(m_windowName);
         }
 
         public bool IsActive()
@@ -134,18 +132,31 @@ namespace AsciiProgram
             UpdateTextBounds();
         }
 
+        public void AddToMessage(string text)
+        {
+            if (text != null)
+            {
+                m_message += text;
+                m_updated = true;
+                UpdateTextBounds();
+            }
+        }
+        public void RemoveFromMessage(string text)
+        {
+            if (text != null && m_message.Contains(text))
+            {
+                m_message = m_message.Remove(m_message.IndexOf(text), text.Length);
+                m_updated = true;
+                UpdateTextBounds();
+            }
+        }
+
         public void SetBorderChar(char borderChar)
         {
             m_borderChar = borderChar;
             m_updated = true;
             m_useBorder = true;
             UpdateTextBounds();
-        }
-
-        public void SetTextWrapping(bool textWrapping)
-        {
-            m_textWrapping = textWrapping;
-            m_updated = true;
         }
 
         public void SetUseBorder(bool useBorder)
@@ -176,22 +187,24 @@ namespace AsciiProgram
             m_updated = true;
         }
 
-        public void Draw(int layer)
+        public void SetShowName(bool showName)
+        {
+            m_showName = showName;
+        }
+
+        public void Draw()
         {
             if (!m_updated && m_active)
                 return;
 
 
             m_active = true;
-            m_layer = layer;
 
-            DrawBackground(layer);
-            DrawText(layer);
-            
-            m_fastWrite.DisplayBuffer();
+            DrawBackground();
+            DrawText();
         }
 
-        void DrawBackground(int layer)
+        void DrawBackground()
         {
             //fill window with background, include border
             for (int y = 0; y < m_windowSize.y; ++y)
@@ -203,7 +216,7 @@ namespace AsciiProgram
                         //fill first and last row with border
                         for (int x = 0; x < m_windowSize.x; ++x)
                         {
-                            m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                            m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
                         }
                     }
                     else
@@ -212,9 +225,9 @@ namespace AsciiProgram
                         for (int x = 0; x < m_windowSize.x; ++x)
                         {
                             if (x == 0 || x == m_windowSize.x - 1)
-                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_borderChar, m_borderForegroundColor, m_borderBackgroundColor);
                             else
-                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                                m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
                         }
                     }
 
@@ -223,13 +236,13 @@ namespace AsciiProgram
                 {
                     for (int x = 0; x < m_windowSize.x; ++x)
                     {
-                        m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, layer, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
+                        m_fastWrite.AddToBuffer(m_screenPosition.x + x, m_screenPosition.y + y, m_windowName, m_backgroundChar, m_windowForegroundColor, m_windowBackgroundColor);
                     }
                 }
             }
         }
 
-        void DrawText(int layer)
+        void DrawText()
         {
             Vector2 pos = m_screenPosition;
 
@@ -247,12 +260,19 @@ namespace AsciiProgram
             else
                 timesToLoop = formattedMessage.Count;
 
+            if(m_showName)
+            {
+                m_fastWrite.AddToBuffer(pos.x, pos.y, m_windowName, m_windowName, m_messageForegroundColor, m_messageBackgroundColor);
+                pos.y += 1;
+            }
+
+
             for (int i = 0; i < timesToLoop; ++i)
             {
                 m_fastWrite.SetCursorPosition(pos);
 
                 if (formattedMessage[i].Length > 0)
-                    m_fastWrite.AddToBuffer(layer, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
+                    m_fastWrite.AddToBuffer(m_windowName, formattedMessage[i], m_messageForegroundColor, m_messageBackgroundColor);
 
                 pos.y += 1;
             }
@@ -273,7 +293,10 @@ namespace AsciiProgram
                 m_textBounds = m_windowSize;            
             }
 
-            m_messageFormatter.FormatText(m_message, m_textBounds, m_textWrapping);
+            if (m_showName)
+                m_textBounds.y -= 1;
+
+            m_messageFormatter.FormatText(m_message, m_textBounds);
         }
     }
 }

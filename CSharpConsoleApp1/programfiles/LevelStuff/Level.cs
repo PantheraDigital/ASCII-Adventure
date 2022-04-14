@@ -39,14 +39,6 @@ namespace AsciiProgram
 
         public void Update()
         {
-            for (int y = 0; y < m_tiles.Count; ++y)
-            {
-                for (int x = 0; x < m_tiles[y].Count; ++x)
-                {
-                    m_tiles[y][x].Update();
-                }
-            }
-
             foreach (Vector2 key in m_gameObjects.Keys)
             {
                 m_gameObjects[key].Update();
@@ -56,23 +48,48 @@ namespace AsciiProgram
             {
                 m_movingEntities[i].Update();
 
-                if (!m_movingEntities[i].GetMoveLocation().IsEqual(m_movingEntities[i].GetCurrentPosition()))
+                Vector2 moveLocation = m_movingEntities[i].GetMoveLocation();
+                Vector2 currentLocation = m_movingEntities[i].GetCurrentPosition();
+
+                if (!moveLocation.IsEqual(currentLocation))
                 {
-                    if (ValidateMove(m_movingEntities[i].GetMoveLocation()))
+                    if (ValidateMove(moveLocation))
                     {
-                        if (m_gameObjects.ContainsKey(m_movingEntities[i].GetCurrentPosition()))
-                            m_gameObjects[m_movingEntities[i].GetCurrentPosition()].EndCollide();
+                        //end collide before moving out of location
+                        if (m_gameObjects.ContainsKey(currentLocation))
+                            m_gameObjects[currentLocation].EndCollide();
 
-                        m_movingEntities[i].Move();
+                        //collide if object is solid, else move
+                        if (m_gameObjects.ContainsKey(moveLocation) && m_gameObjects[moveLocation].m_solid)
+                            m_gameObjects[moveLocation].OnCollide(m_movingEntities[i]);
+                        else
+                        {
+                            m_movingEntities[i].Move();
+                            currentLocation = m_movingEntities[i].GetCurrentPosition();
+                        }
 
-                        Vector2 coverdTilePos = m_movingEntities[i].GetCurrentPosition();
-                        m_tiles[coverdTilePos.y][coverdTilePos.x].OnCollide(m_movingEntities[i]);
+                        //collide with new position                    
+                        if (m_gameObjects.ContainsKey(currentLocation))
+                        {
+                            m_gameObjects[currentLocation].OnCollide(m_movingEntities[i]);
 
-                        if (m_gameObjects.ContainsKey(coverdTilePos))
-                            m_gameObjects[coverdTilePos].OnCollide(m_movingEntities[i]);
+                            if(m_movingEntities[i].HasTag("Player") && m_gameObjects[currentLocation].m_pickUp == true)
+                            {
+                                ComplexEntity obj = m_movingEntities[i] as ComplexEntity;
+                                if (obj != null)
+                                {
+                                    if (obj.HasComponent("Inventory"))
+                                    {
+                                        if(obj.GetComponent<Inventory>("Inventory").Add(m_gameObjects[currentLocation]))
+                                            m_gameObjects.Remove(currentLocation);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
         }
 
 
