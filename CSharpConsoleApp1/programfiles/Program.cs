@@ -42,10 +42,11 @@ namespace AsciiProgram
             ComplexEntity player = new ComplexEntity(playerDisplay, controller, "player");
 
 
-            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 11, Console.WindowHeight - 7), new Vector2(10, 6), '-', ConsoleColor.Gray);
+            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 21, Console.WindowHeight - 17), new Vector2(11, 6), '-', ConsoleColor.Gray);
             pInv.SetBorderChar('\\');
             pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
-            player.AddComponent(new Inventory(pInv,1));
+            pInv.SetShowName(true);
+            player.AddComponent(new Inventory(pInv,27));
             
             //List<MovingEntity> players = new List<MovingEntity>();
             //players.Add(player);

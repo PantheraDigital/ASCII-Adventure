@@ -31,6 +31,7 @@ namespace AsciiProgram
 
         bool m_active;
         bool m_updated;
+        bool m_showName;
         string m_windowName;
         FastWrite m_fastWrite;
 
@@ -186,6 +187,11 @@ namespace AsciiProgram
             m_updated = true;
         }
 
+        public void SetShowName(bool showName)
+        {
+            m_showName = showName;
+        }
+
         public void Draw()
         {
             if (!m_updated && m_active)
@@ -254,6 +260,12 @@ namespace AsciiProgram
             else
                 timesToLoop = formattedMessage.Count;
 
+            if(m_showName)
+            {
+                m_fastWrite.AddToBuffer(pos.x, pos.y, m_windowName, m_windowName, m_messageForegroundColor, m_messageBackgroundColor);
+                pos.y += 1;
+            }
+
 
             for (int i = 0; i < timesToLoop; ++i)
             {
@@ -280,6 +292,9 @@ namespace AsciiProgram
             {
                 m_textBounds = m_windowSize;            
             }
+
+            if (m_showName)
+                m_textBounds.y -= 1;
 
             m_messageFormatter.FormatText(m_message, m_textBounds);
         }

@@ -24,8 +24,9 @@ namespace AsciiProgram
             m_player = player;
             m_currentLevel = Program.SetUpLevel(levelName, player);
 
-            int levelCenter = (int)(Console.WindowWidth / 2) - (int)(m_currentLevel.GetMaxDimentions().x / 2);
-            m_levelCam = new LevelCamera(new Vector2(3, 0), new Vector2(19, 19), new Vector2(levelCenter, (int)(Console.WindowHeight / 2) - (int)(m_currentLevel.GetMaxDimentions().y / 2)));
+            int levelCenterX = (int)(Console.WindowWidth / 2);// - (int)(m_currentLevel.GetMaxDimentions().x / 2);
+            int levelCenterY = (int)(Console.WindowHeight / 2);// - (int)(m_currentLevel.GetMaxDimentions().y / 2);
+            m_levelCam = new LevelCamera(new Vector2(0, 0), new Vector2(21, 21), new Vector2(levelCenterX, levelCenterY));
         }
 
         public void Run()
@@ -38,7 +39,7 @@ namespace AsciiProgram
                 m_levelCam.CenterCameraOn(m_player.GetCurrentPosition());
                 m_levelCam.UpdateDisplayList(m_currentLevel);
 
-                m_levelCam.Draw(0);
+                m_levelCam.Draw();
                 m_player.DrawComponents();
 
                 fastWrite.DisplayBuffer();

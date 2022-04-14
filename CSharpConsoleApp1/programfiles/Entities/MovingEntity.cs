@@ -29,14 +29,16 @@ namespace AsciiProgram
         List<GameObject> m_gameObjects;
         GameWindow m_display;
         int m_sizeLimit;
+        bool m_showName;
 
-        public Inventory(GameWindow gameWindow, int sizeLimit = 0)
+        public Inventory(GameWindow gameWindow, int sizeLimit = 0, bool showName = false)
             :base("Inventory")
         {
             m_gameObjects = new List<GameObject>();
             m_display = gameWindow;
             m_display.SetMessage("");
             m_sizeLimit = sizeLimit;
+            m_showName = showName;
         }
 
         public override void Draw()
