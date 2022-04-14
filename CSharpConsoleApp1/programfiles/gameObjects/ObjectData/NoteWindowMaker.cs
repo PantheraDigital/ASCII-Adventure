@@ -49,7 +49,7 @@ namespace AsciiProgram
             public static NoteWindowData[] mazeLevel1Notes = { };
 
 
-            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData("startNote", new Vector2(1, 1), new Vector2(20, 8), "\nA key(k) will let you pass but an exit(*) will set you free", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '-', ConsoleColor.Red) };
+            public static NoteWindowData[] mazeLevel2Notes = { new NoteWindowData("startNote", new Vector2(10, 10), new Vector2(20, 8), "\nA key(k) will let you pass but an exit(*) will set you free", ConsoleColor.White, ConsoleColor.Black, '-', ConsoleColor.Gray, ConsoleColor.Black, '!', ConsoleColor.Red) };
 
         }
 

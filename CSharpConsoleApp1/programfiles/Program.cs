@@ -42,9 +42,9 @@ namespace AsciiProgram
             ComplexEntity player = new ComplexEntity(playerDisplay, controller, "player");
 
 
-            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 21, Console.WindowHeight - 17), new Vector2(11, 6), '-', ConsoleColor.Gray);
+            GameWindow pInv = new GameWindow("PlayerInv", new Vector2(Console.WindowWidth - 25, Console.WindowHeight - 15), new Vector2(11, 6), '_', ConsoleColor.Gray);
             pInv.SetBorderChar('\\');
-            pInv.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
+            pInv.SetBorderColor(ConsoleColor.DarkGray, ConsoleColor.Black);
             pInv.SetShowName(true);
             player.AddComponent(new Inventory(pInv,27));
             
@@ -52,14 +52,13 @@ namespace AsciiProgram
             //players.Add(player);
 
             
-            GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Gray);
-            quitWindow.SetMessage("Quitting game\n\n\nPress any key to leave");
-            quitWindow.SetBorderChar('\\');
-            quitWindow.SetBorderColor(ConsoleColor.DarkRed, ConsoleColor.Black);
+            GameWindow quitWindow = new GameWindow("quitWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(5 / 2)), new Vector2(25, 6), '-', ConsoleColor.Magenta);
+            quitWindow.SetMessage("Quitting game----------\n\n\nPress any key to leave-", ConsoleColor.Cyan, ConsoleColor.Black);
+            quitWindow.SetBorderChar('*');
+            quitWindow.SetBorderColor(ConsoleColor.Magenta, ConsoleColor.Black);
             
             GameWindow startWindow = new GameWindow("startWindow", new Vector2(halfWindowWidth - (int)(25 / 2), halfWindowHeight - (int)(7 / 2)), new Vector2(25, 7), '-', ConsoleColor.Magenta, ConsoleColor.Black);
             startWindow.SetMessage("\n\n-Press any key to play-", ConsoleColor.Cyan, ConsoleColor.Black);
-            //startWindow.SetTextWrapping(true);
             startWindow.SetBorderChar('*');
 
             startWindow.Draw();
@@ -175,7 +174,7 @@ namespace AsciiProgram
                     break;
 
                 case 'k':
-                    objectToAdd = new KeyObject(new DisplayObject(objectType, position));
+                    objectToAdd = new KeyObject(new DisplayObject(objectType, ConsoleColor.Yellow, ConsoleColor.Black, position));
                     break;
 
 
