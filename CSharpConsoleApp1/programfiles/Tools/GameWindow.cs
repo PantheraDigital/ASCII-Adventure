@@ -125,11 +125,8 @@ namespace AsciiProgram
         }
         public void SetMessage(string message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
         {
-            m_message = message;
-            m_updated = true;
-
             SetMessageColors(foregroundColor, backgroundColor);
-            UpdateTextBounds();
+            SetMessage(message);
         }
 
         public void AddToMessage(string text)
@@ -157,6 +154,11 @@ namespace AsciiProgram
             m_updated = true;
             m_useBorder = true;
             UpdateTextBounds();
+        }
+        public void SetBorderChar(char borderChar, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+        {
+            SetBorderColor(foregroundColor, backgroundColor);
+            SetBorderChar(borderChar);
         }
 
         public void SetUseBorder(bool useBorder)
