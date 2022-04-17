@@ -18,7 +18,7 @@ namespace AsciiProgram
         {
             m_gameObjects = new List<GameObject>();
             m_display = gameWindow;
-            m_display.SetMessage("");
+            m_display.SetMessage("  empty  ");
             m_sizeLimit = sizeLimit;
         }
 
@@ -51,6 +51,9 @@ namespace AsciiProgram
         {
             if (m_sizeLimit > 0 && m_gameObjects.Count >= m_sizeLimit)
                 return false;
+
+            if (m_gameObjects.Count == 0)
+                m_display.SetMessage("");
 
             if (gameObject != null)
             {
@@ -87,6 +90,10 @@ namespace AsciiProgram
                     GameObject temp = m_gameObjects[i];
                     m_display.RemoveFromMessage(temp.m_displayObject.m_spriteChar.ToString());
                     m_gameObjects.Remove(m_gameObjects[i]);
+
+                    if (m_gameObjects.Count == 0)
+                        m_display.SetMessage("  empty  ");
+
                     return temp;
                 }
             }

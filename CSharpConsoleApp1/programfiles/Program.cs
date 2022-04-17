@@ -46,7 +46,7 @@ namespace AsciiProgram
             pInv.SetBorderChar('\\');
             pInv.SetBorderColor(ConsoleColor.DarkGray, ConsoleColor.Black);
             pInv.SetShowName(true);
-            player.AddComponent(new Inventory(pInv,27));
+            player.AddComponent(new Inventory(pInv, 27));
             
             //List<MovingEntity> players = new List<MovingEntity>();
             //players.Add(player);
