@@ -35,7 +35,7 @@ namespace AsciiProgram
 
         public bool IsEqual(DisplayObject other, bool testPosition = false)
         {
-            if (m_spriteChar == other.m_spriteChar && m_foregroudColor == other.m_foregroudColor && m_backgroundColor == other.m_backgroundColor)
+            if (other != null && m_spriteChar == other.m_spriteChar && m_foregroudColor == other.m_foregroudColor && m_backgroundColor == other.m_backgroundColor)
             {
                 if (testPosition && m_displayPosition.IsEqual(other.m_displayPosition))
                     return true;
